@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>OrionPath — Orientación vocacional para estudiantes</title>
+<meta name="description" content="OrionPath ayuda a estudiantes a explorar áreas profesionales, carreras y universidades de Paraguay mediante recursos de orientación vocacional.">
+<meta name="theme-color" content="#040607">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+<style>
+:root{--periwinkle:#E3D9FC;--magenta:#9d4cc2;--blue:#4928C2;--velvet:#5B2A62;--black:#040607;--white:#f8f4ff}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--black);color:var(--periwinkle);font-family:'DM Sans',sans-serif;overflow-x:hidden}
+#stars-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.2rem 3rem;background:rgba(4,6,7,.7);backdrop-filter:blur(16px);border-bottom:1px solid rgba(191,64,250,.15);transition:all .3s}
+.nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.5rem;color:var(--white);letter-spacing:-.02em}
+.nav-logo span{color:var(--magenta)}
+.nav-links{display:flex;gap:2rem;list-style:none}
+.nav-links a{color:var(--periwinkle);text-decoration:none;font-size:.85rem;font-weight:500;letter-spacing:.05em;text-transform:uppercase;opacity:.7;transition:opacity .2s,color .2s}
+.nav-links a:hover{opacity:1;color:var(--magenta)}
+.hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px}
+.hamburger span{display:block;width:24px;height:2px;background:var(--periwinkle);border-radius:2px;transition:all .3s}
+.mobile-menu{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(4,6,7,.97);z-index:99;flex-direction:column;align-items:center;justify-content:center;gap:2.5rem}
+.mobile-menu.open{display:flex}
+.mobile-menu a{font-family:'Syne',sans-serif;font-size:2rem;font-weight:700;color:var(--periwinkle);text-decoration:none;transition:color .2s}
+.mobile-menu a:hover{color:var(--magenta)}
+.mobile-close{position:absolute;top:1.5rem;right:2rem;background:none;border:none;color:var(--periwinkle);font-size:2rem;cursor:pointer}
+section{position:relative;z-index:1;padding:7rem 2rem}
+#hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 2rem;overflow:hidden}
+.hero-eyebrow{font-size:.75rem;letter-spacing:.25em;text-transform:uppercase;color:var(--magenta);margin-bottom:1.5rem;opacity:0;animation:fadeUp .8s .3s forwards}
+.hero-title{font-family:'Syne',sans-serif;font-size:clamp(3.5rem,12vw,8rem);font-weight:800;line-height:.92;letter-spacing:-.03em;color:var(--white);opacity:0;animation:fadeUp .8s .5s forwards;margin-bottom:.3rem}
+.hero-title .accent{color:var(--magenta)}
+.hero-subtitle{font-size:clamp(1rem,2.5vw,1.3rem);color:var(--periwinkle);opacity:0;animation:fadeUp .8s .7s forwards;max-width:520px;margin:1.5rem auto 2.5rem;line-height:1.6;font-weight:300}
+.hero-cta{display:inline-flex;gap:1rem;opacity:0;animation:fadeUp .8s .9s forwards;flex-wrap:wrap;justify-content:center}
+.btn-primary{padding:.9rem 2.2rem;background:var(--magenta);color:var(--black);font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;letter-spacing:.04em;border:none;border-radius:100px;text-decoration:none;transition:transform .2s,box-shadow .2s;cursor:pointer;display:inline-block}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 0 32px rgba(191,64,250,.5)}
+.btn-outline{padding:.9rem 2.2rem;border:1.5px solid rgba(191,64,250,.5);color:var(--periwinkle);font-family:'Syne',sans-serif;font-weight:600;font-size:.9rem;letter-spacing:.04em;border-radius:100px;text-decoration:none;transition:border-color .2s,color .2s;cursor:pointer;display:inline-block;background:none}
+.btn-outline:hover{border-color:var(--magenta);color:var(--magenta)}
+.scroll-indicator{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.5rem;opacity:0;animation:fadeIn 1s 1.5s forwards}
+.scroll-indicator span{font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;opacity:.4}
+.scroll-line{width:1px;height:48px;background:linear-gradient(to bottom,var(--magenta),transparent);animation:scrollPulse 1.5s ease-in-out infinite}
+.section-label{font-size:.7rem;letter-spacing:.3em;text-transform:uppercase;color:var(--magenta);margin-bottom:1rem;opacity:.8}
+.section-title{font-family:'Syne',sans-serif;font-size:clamp(2rem,5vw,3.5rem);font-weight:800;color:var(--white);line-height:1.05;letter-spacing:-.02em;margin-bottom:1.5rem}
+.section-desc{font-size:1rem;line-height:1.7;color:var(--periwinkle);opacity:.75;max-width:560px}
+.divider{width:60px;height:2px;background:linear-gradient(90deg,var(--magenta),transparent);margin:1.2rem 0 1.8rem}
+#about{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;max-width:1100px;margin:0 auto}
+.about-visual{position:relative;height:380px}
+.orion-ring{position:absolute;border-radius:50%;border:1px solid rgba(191,64,250,.2);animation:spin linear infinite}
+.orion-ring:nth-child(1){width:200px;height:200px;top:90px;left:80px;animation-duration:20s}
+.orion-ring:nth-child(2){width:300px;height:300px;top:40px;left:30px;animation-duration:35s;animation-direction:reverse;border-color:rgba(73,40,194,.3)}
+.orion-ring:nth-child(3){width:380px;height:380px;top:0;left:-10px;animation-duration:55s;border-color:rgba(91,42,98,.2)}
+.orion-core{position:absolute;width:80px;height:80px;background:radial-gradient(circle,var(--magenta),var(--blue));border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%);box-shadow:0 0 60px rgba(191,64,250,.6),0 0 120px rgba(191,64,250,.2)}
+.star-dot{position:absolute;width:4px;height:4px;background:var(--magenta);border-radius:50%;box-shadow:0 0 6px var(--magenta)}
+#areas{max-width:1100px;margin:0 auto}
+.areas-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.5rem;margin-top:3rem}
+.area-card{background:rgba(255,255,255,.03);border:1px solid rgba(191,64,250,.12);border-radius:20px;padding:2rem;transition:transform .3s,border-color .3s,background .3s}
+.area-card:hover{transform:translateY(-6px);border-color:rgba(191,64,250,.4);background:rgba(191,64,250,.05)}
+.area-icon{font-size:2.2rem;margin-bottom:1rem}
+.area-name{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;color:var(--white);margin-bottom:.5rem}
+.area-desc{font-size:.875rem;line-height:1.6;color:var(--periwinkle);opacity:.65}
+#careers{max-width:1100px;margin:0 auto}
+.career-filters{display:flex;gap:.75rem;flex-wrap:wrap;margin:2rem 0}
+.filter-btn{padding:.5rem 1.2rem;border-radius:100px;border:1px solid rgba(191,64,250,.25);background:transparent;color:var(--periwinkle);font-family:'DM Sans',sans-serif;font-size:.8rem;letter-spacing:.04em;cursor:pointer;transition:all .2s}
+.filter-btn.active,.filter-btn:hover{background:var(--magenta);border-color:var(--magenta);color:var(--black)}
+.careers-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem}
+.career-card{background:rgba(255,255,255,.03);border:1px solid rgba(73,40,194,.2);border-radius:14px;padding:1.4rem;transition:all .25s}
+.career-card:hover{border-color:var(--blue);background:rgba(73,40,194,.08);transform:translateY(-3px)}
+.career-area-tag{font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--magenta);margin-bottom:.5rem;opacity:.8}
+.career-name{font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;color:var(--white);margin-bottom:.4rem}
+.career-duration{font-size:.78rem;color:var(--periwinkle);opacity:.5}
+
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.career-search-wrap{margin:1.5rem 0 1rem;max-width:520px}
+.career-search{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(191,64,250,.2);border-radius:12px;padding:.9rem 1rem;color:var(--white);font-family:'DM Sans',sans-serif;font-size:.95rem;outline:none}
+.career-search:focus{border-color:var(--magenta);box-shadow:0 0 0 3px rgba(191,64,250,.08)}
+.uni-link{display:inline-block;margin-top:1rem;color:var(--magenta);font-size:.8rem;text-decoration:none;font-weight:600}
+.uni-link:hover{text-decoration:underline}
+.source-box{margin-top:2rem;padding:1.25rem 1.5rem;border:1px solid rgba(191,64,250,.18);border-radius:16px;background:rgba(255,255,255,.025);line-height:1.7;font-size:.88rem}
+.source-note{margin-top:.5rem;opacity:.55;font-size:.78rem}
+@media(max-width:600px){.career-search-wrap{max-width:none}.source-box{padding:1rem}}
+#universities{max-width:1100px;margin:0 auto}
+.uni-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem;margin-top:3rem}
+.uni-card{background:linear-gradient(135deg,rgba(91,42,98,.15),rgba(73,40,194,.08));border:1px solid rgba(191,64,250,.15);border-radius:20px;padding:2rem;transition:all .3s}
+.uni-card:hover{transform:translateY(-5px);border-color:rgba(191,64,250,.4);box-shadow:0 20px 60px rgba(191,64,250,.1)}
+.uni-sigla{font-family:'Syne',sans-serif;font-size:2.5rem;font-weight:800;color:var(--magenta);line-height:1;margin-bottom:.3rem;opacity:.7}
+.uni-name{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;color:var(--white);margin-bottom:.6rem}
+.uni-type{display:inline-block;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:.25rem .7rem;border-radius:100px;margin-bottom:.8rem}
+.uni-type.publica{background:rgba(73,40,194,.3);color:#a78bfa}
+.uni-type.privada{background:rgba(191,64,250,.15);color:var(--magenta)}
+.uni-desc{font-size:.84rem;line-height:1.6;color:var(--periwinkle);opacity:.65}
+#howto{max-width:900px;margin:0 auto}
+.steps{display:flex;flex-direction:column;gap:0;margin-top:3rem;position:relative}
+.steps::before{content:'';position:absolute;left:28px;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,var(--magenta),var(--blue),transparent)}
+.step{display:flex;gap:2rem;align-items:flex-start;padding-bottom:3rem;position:relative}
+.step-num{width:56px;height:56px;min-width:56px;border-radius:50%;background:var(--black);border:2px solid var(--magenta);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;color:var(--magenta);position:relative;z-index:1;box-shadow:0 0 20px rgba(191,64,250,.3)}
+.step-title{font-family:'Syne',sans-serif;font-weight:700;font-size:1.15rem;color:var(--white);margin-bottom:.4rem}
+.step-text{font-size:.9rem;line-height:1.7;color:var(--periwinkle);opacity:.7}
+#test{max-width:760px;margin:0 auto;text-align:center}
+.test-box{background:rgba(255,255,255,.02);border:1px solid rgba(191,64,250,.2);border-radius:24px;padding:3rem 2.5rem;margin-top:3rem}
+.test-progress-bar{height:3px;background:rgba(255,255,255,.08);border-radius:2px;margin-bottom:2.5rem;overflow:hidden}
+.test-progress-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--magenta));border-radius:2px;transition:width .5s ease;width:0%}
+.test-question{font-family:'Syne',sans-serif;font-size:1.25rem;font-weight:700;color:var(--white);margin-bottom:2rem;line-height:1.4;min-height:3.5rem}
+.test-options{display:flex;flex-direction:column;gap:.75rem;margin-bottom:2rem}
+.test-option{padding:1rem 1.5rem;border:1px solid rgba(191,64,250,.2);border-radius:12px;background:transparent;color:var(--periwinkle);font-family:'DM Sans',sans-serif;font-size:.95rem;text-align:left;cursor:pointer;transition:all .2s}
+.test-option:hover,.test-option.selected{border-color:var(--magenta);background:rgba(191,64,250,.1);color:var(--white)}
+.test-nav{display:flex;gap:1rem;justify-content:center}
+.test-result{display:none;animation:fadeUp .6s forwards}
+.result-emoji{font-size:3rem;margin-bottom:1rem}
+.result-title{font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;color:var(--white);margin-bottom:.5rem}
+.result-desc{font-size:.95rem;line-height:1.7;opacity:.75;margin-bottom:1.5rem}
+.result-careers{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center}
+.result-tag{padding:.4rem 1rem;background:rgba(191,64,250,.15);border:1px solid rgba(191,64,250,.3);border-radius:100px;font-size:.8rem;color:var(--magenta)}
+#contact{max-width:700px;margin:0 auto;text-align:center}
+.contact-form{display:flex;flex-direction:column;gap:1rem;margin-top:3rem;text-align:left}
+.form-group{display:flex;flex-direction:column;gap:.4rem}
+.form-group label{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--magenta);opacity:.8}
+.form-group input,.form-group textarea,.form-group select{background:rgba(255,255,255,.04);border:1px solid rgba(191,64,250,.2);border-radius:10px;padding:.85rem 1rem;color:var(--white);font-family:'DM Sans',sans-serif;font-size:.95rem;outline:none;transition:border-color .2s;appearance:none}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:var(--magenta)}
+.form-group textarea{resize:vertical;min-height:100px}
+.form-group select option{background:#1a1020}
+footer{position:relative;z-index:1;padding:3rem 2rem;text-align:center;border-top:1px solid rgba(191,64,250,.1)}
+.footer-logo{font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;color:var(--white);margin-bottom:.5rem}
+.footer-logo span{color:var(--magenta)}
+.footer-sub{font-size:.8rem;opacity:.4;margin-bottom:2rem}
+.footer-links{display:flex;gap:2rem;justify-content:center;flex-wrap:wrap}
+.footer-links a{font-size:.8rem;color:var(--periwinkle);opacity:.5;text-decoration:none;transition:opacity .2s}
+.footer-links a:hover{opacity:1}
+.footer-bottom{margin-top:2rem;font-size:.75rem;opacity:.3}
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes scrollPulse{0%,100%{opacity:.2;transform:scaleY(.8)}50%{opacity:1;transform:scaleY(1)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@media(max-width:768px){
+  nav{padding:1rem 1.5rem}
+  .nav-links{display:none}
+  .hamburger{display:flex}
+  #about{grid-template-columns:1fr;gap:2rem}
+  .about-visual{height:260px}
+  .orion-ring:nth-child(3){display:none}
+  section{padding:5rem 1.5rem}
+  .steps::before{left:24px}
+  .step-num{width:48px;height:48px;min-width:48px;font-size:1rem}
+  .test-box{padding:2rem 1.5rem}
+}
+@media(max-width:480px){
+  .hero-cta{flex-direction:column;align-items:center}
+  .btn-primary,.btn-outline{width:100%;text-align:center}
+}
+</style>
+</head>
+<body>
+<canvas id="stars-canvas"></canvas>
+
+<nav id="navbar">
+  <div class="nav-logo">Orion<span>Path</span></div>
+  <ul class="nav-links">
+    <li><a href="#hero">Inicio</a></li>
+    <li><a href="#areas">Áreas</a></li>
+    <li><a href="#careers">Carreras</a></li>
+    <li><a href="#universities">Universidades</a></li>
+    <li><a href="#howto">¿Cómo ingresar?</a></li>
+    <li><a href="#test">Test</a></li>
+    <li><a href="#contact">Contacto</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" aria-label="Abrir menú" aria-controls="mobileMenu" aria-expanded="false" onclick="toggleMobile()"><span></span><span></span><span></span></button>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-close" id="mobileClose" onclick="closeMobile()">✕</button>
+  <a href="#hero" onclick="closeMobile()">Inicio</a>
+  <a href="#areas" onclick="closeMobile()">Áreas</a>
+  <a href="#careers" onclick="closeMobile()">Carreras</a>
+  <a href="#universities" onclick="closeMobile()">Universidades</a>
+  <a href="#howto" onclick="closeMobile()">¿Cómo ingresar?</a>
+  <a href="#test" onclick="closeMobile()">Test Vocacional</a>
+  <a href="#contact" onclick="closeMobile()">Contacto</a>
+</div>
+
+<section id="hero">
+  <p class="hero-eyebrow">Escuela Nacional de Comercio N°1 · Asunción, Paraguay</p>
+  <h1 class="hero-title">Tu<br/><span class="accent">camino</span><br/>comienza<br/>aquí.</h1>
+  <p class="hero-subtitle">OrionPath es tu guía de orientación vocacional. Explorá carreras, conocé universidades y descubrí hacia dónde apuntan tus estrellas.</p>
+  <div class="hero-cta">
+    <a href="#test" class="btn-primary">Hacer el test vocacional</a>
+    <a href="#careers" class="btn-outline">Explorar carreras</a>
+  </div>
+  <div class="scroll-indicator"><span></span><div class="scroll-line"></div></div>
+</section>
+
+<section>
+  <div id="about">
+    <div class="about-visual">
+      <div class="orion-ring"></div>
+      <div class="orion-ring"></div>
+      <div class="orion-ring"></div>
+      <div class="orion-core"></div>
+      <div class="star-dot" style="top:20%;left:15%;animation:float 3s ease-in-out infinite"></div>
+      <div class="star-dot" style="top:70%;left:80%;animation:float 4s ease-in-out .5s infinite;width:6px;height:6px"></div>
+      <div class="star-dot" style="top:85%;left:20%;animation:float 3.5s ease-in-out 1s infinite"></div>
+      <div class="star-dot" style="top:10%;left:75%;animation:float 5s ease-in-out .2s infinite;width:3px;height:3px;opacity:.5"></div>
+    </div>
+    <div class="reveal">
+      <p class="section-label">Sobre OrionPath</p>
+      <h2 class="section-title">Orientación vocacional para la generación digital</h2>
+      <div class="divider"></div>
+      <p class="section-desc">OrionPath es un proyecto educativo desarrollado por estudiantes de la Especialidad Informática de la ENC1, del 3er curso, diseñado para acompañar a sus compañeros en uno de los momentos más importantes de su vida: la elección de carrera.</p>
+      <br/>
+      <p class="section-desc">Así como Orión guía a los navegantes en la oscuridad, esta plataforma busca iluminar el camino hacia el futuro académico y profesional de cada estudiante.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div id="areas">
+    <div class="reveal">
+      <p class="section-label">Áreas de estudio</p>
+      <h2 class="section-title">¿Qué te apasiona?</h2>
+      <div class="divider"></div>
+      <p class="section-desc">Cada persona tiene una inclinación natural. Conocé las grandes áreas del conocimiento y encontrá la tuya.</p>
+    </div>
+    <div class="areas-grid">
+      <div class="area-card reveal"><div class="area-icon">💻</div><div class="area-name">Tecnología e Informática</div><div class="area-desc">Programación, ciberseguridad, inteligencia artificial, redes y desarrollo de software. El área con mayor demanda laboral del siglo XXI.</div></div>
+      <div class="area-card reveal"><div class="area-icon">⚕️</div><div class="area-name">Ciencias de la Salud</div><div class="area-desc">Medicina, enfermería, odontología, nutrición y farmacia. Vocaciones orientadas al cuidado y bienestar humano.</div></div>
+      <div class="area-card reveal"><div class="area-icon">⚖️</div><div class="area-name">Ciencias Sociales y Jurídicas</div><div class="area-desc">Derecho, ciencias políticas, trabajo social, psicología y comunicación. Transformar la sociedad desde adentro.</div></div>
+      <div class="area-card reveal"><div class="area-icon">📊</div><div class="area-name">Administración y Negocios</div><div class="area-desc">Contabilidad, administración de empresas, marketing, comercio internacional y economía.</div></div>
+      <div class="area-card reveal"><div class="area-icon">🎨</div><div class="area-name">Arte y Diseño</div><div class="area-desc">Diseño gráfico, arquitectura, comunicación visual, artes plásticas y producción audiovisual.</div></div>
+      <div class="area-card reveal"><div class="area-icon">🔬</div><div class="area-name">Ciencias Exactas y Naturales</div><div class="area-desc">Ingeniería, biología, química, física, agronomía y ciencias ambientales. Para mentes analíticas y curiosas.</div></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div id="careers">
+    <div class="reveal">
+      <p class="section-label">Carreras universitarias</p>
+      <h2 class="section-title">Explorá tus opciones</h2>
+      <div class="divider"></div>
+      <p class="section-desc">Filtrá por área o buscá una carrera. Las duraciones son referenciales: verificá siempre el plan de estudios vigente en la institución.</p>
+    </div>
+    <div class="career-search-wrap">
+      <label for="careerSearch" class="sr-only">Buscar una carrera</label>
+      <input id="careerSearch" class="career-search" type="search" placeholder="Buscar una carrera..." oninput="searchCareers(this.value)" autocomplete="off"/>
+    </div>
+    <div class="career-filters">
+      <button class="filter-btn active" onclick="filterCareers('all',this)">Todas</button>
+      <button class="filter-btn" onclick="filterCareers('tech',this)">Tecnología</button>
+      <button class="filter-btn" onclick="filterCareers('salud',this)">Salud</button>
+      <button class="filter-btn" onclick="filterCareers('social',this)">Sociales</button>
+      <button class="filter-btn" onclick="filterCareers('admin',this)">Admin.</button>
+      <button class="filter-btn" onclick="filterCareers('arte',this)">Arte</button>
+      <button class="filter-btn" onclick="filterCareers('exactas',this)">Exactas</button>
+    </div>
+    <div class="careers-grid" id="careersGrid"></div>
+  </div>
+</section>
+
+<section>
+  <div id="universities">
+    <div class="reveal">
+      <p class="section-label">Universidades de Paraguay</p>
+      <h2 class="section-title">¿Dónde estudiar?</h2>
+      <div class="divider"></div>
+      <p class="section-desc">Conocé las principales instituciones de educación superior del país, tanto públicas como privadas.</p>
+    </div>
+    <div class="uni-grid">
+      <article class="uni-card reveal"><div class="uni-sigla">UNA</div><div class="uni-name">Universidad Nacional de Asunción</div><span class="uni-type publica">Pública</span><div class="uni-desc">Universidad pública fundada en 1889. Su sitio oficial dispone de un buscador de programas académicos y carreras de grado.</div><a class="uni-link" href="https://www.una.py/" target="_blank" rel="noopener noreferrer">Sitio oficial ↗</a></article>
+      <article class="uni-card reveal"><div class="uni-sigla">UCA</div><div class="uni-name">Universidad Católica "Nuestra Señora de la Asunción"</div><span class="uni-type privada">Privada</span><div class="uni-desc">Institución de educación superior con presencia en Paraguay. Consultá directamente su oferta académica, admisión y becas.</div><a class="uni-link" href="https://www.uca.edu.py/" target="_blank" rel="noopener noreferrer">Sitio oficial ↗</a></article>
+      <article class="uni-card reveal"><div class="uni-sigla">UPAP</div><div class="uni-name">Universidad Politécnica y Artística del Paraguay</div><span class="uni-type privada">Privada</span><div class="uni-desc">Cuenta con carreras vinculadas al arte y la tecnología, ciencias empresariales, humanidades, salud y jurídicas, además de modalidades presencial, semipresencial y a distancia.</div><a class="uni-link" href="https://upap.edu.py/" target="_blank" rel="noopener noreferrer">Sitio oficial ↗</a></article>
+      <article class="uni-card reveal"><div class="uni-sigla">UNINORTE</div><div class="uni-name">Universidad del Norte</div><span class="uni-type privada">Privada</span><div class="uni-desc">Universidad privada con oferta de grado en áreas como salud, derecho, economía, educación, ingeniería y medicina.</div><a class="uni-link" href="https://uninorte.edu.py/" target="_blank" rel="noopener noreferrer">Sitio oficial ↗</a></article>
+      <article class="uni-card reveal"><div class="uni-sigla">UNIBE</div><div class="uni-name">Universidad Iberoamericana del Paraguay</div><span class="uni-type privada">Privada</span><div class="uni-desc">Ofrece carreras y programas de grado y posgrado, con sedes en Asunción y San Lorenzo. La información académica debe consultarse en su sitio oficial.</div><a class="uni-link" href="https://www.unibe.edu.py/" target="_blank" rel="noopener noreferrer">Sitio oficial ↗</a></article>
+      <article class="uni-card reveal"><div class="uni-sigla">COLUMBIA</div><div class="uni-name">Universidad Columbia del Paraguay</div><span class="uni-type privada">Privada</span><div class="uni-desc">Cuenta con carreras en áreas como informática, administración, marketing, arquitectura, derecho, medicina y otras disciplinas.</div><a class="uni-link" href="https://www.columbia.edu.py/" target="_blank" rel="noopener noreferrer">Sitio oficial ↗</a></article>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div id="howto">
+    <div class="reveal">
+      <p class="section-label">¿Cómo ingresar a la universidad?</p>
+      <h2 class="section-title">Tu hoja de ruta</h2>
+      <div class="divider"></div>
+      <p class="section-desc">El proceso puede parecer complejo, pero con información clara se vuelve mucho más sencillo.</p>
+    </div>
+    <div class="steps">
+      <div class="step reveal"><div class="step-num">01</div><div class="step-content"><div class="step-title">Elegí tu área y carrera</div><div class="step-text">Usá el test vocacional y explorá las secciones de carreras y áreas para identificar qué te apasiona. Investigá las salidas laborales y el mercado de trabajo en Paraguay.</div></div></div>
+      <div class="step reveal"><div class="step-num">02</div><div class="step-content"><div class="step-title">Investigá las instituciones</div><div class="step-text">Compará universidades: duración de la carrera, modalidad (presencial/semipresencial), costo de la matrícula y cuota mensual, y si cuentan con becas o financiamiento.</div></div></div>
+      <div class="step reveal"><div class="step-num">03</div><div class="step-content"><div class="step-title">Preparate para el ingreso</div><div class="step-text">Las universidades públicas como la UNA requieren examen de admisión. Preparate con antelación. Las privadas generalmente solo piden documentación y entrevista.</div></div></div>
+      <div class="step reveal"><div class="step-num">04</div><div class="step-content"><div class="step-title">Reuní tu documentación</div><div class="step-text">Generalmente necesitás: cédula de identidad, certificado de bachillerato, certificado de notas y fotos carnet. Consultá cada institución para requisitos específicos.</div></div></div>
+      <div class="step reveal"><div class="step-num">05</div><div class="step-content"><div class="step-title">Buscá becas y financiamiento</div><div class="step-text">El BECAL (Becas Carlos Antonio López) ofrece financiamiento para estudios superiores. Muchas universidades tienen programas de becas internas por rendimiento académico.</div></div></div>
+      <div class="step reveal"><div class="step-num">06</div><div class="step-content"><div class="step-title">¡Inscribite y comenzá!</div><div class="step-text">Una vez aprobado el ingreso, completá la inscripción en los plazos establecidos. Organizá bien tu tiempo desde el primer día — el comienzo marca la diferencia.</div></div></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div id="test">
+    <div class="reveal">
+      <p class="section-label">Test Vocacional</p>
+      <h2 class="section-title">¿Hacia dónde apuntan tus estrellas?</h2>
+      <div class="divider" style="margin:1.2rem auto 1.8rem"></div>
+      <p class="section-desc" style="margin:0 auto">Respondé preguntas sobre tus intereses y preferencias para obtener una orientación inicial. El resultado no determina qué carrera debés estudiar ni reemplaza una orientación profesional.</p>
+    </div>
+    <div class="test-box reveal">
+      <div class="test-progress-bar"><div class="test-progress-fill" id="testProgress"></div></div>
+      <div id="testContent">
+        <div class="test-question" id="testQuestion"></div>
+        <div class="test-options" id="testOptions"></div>
+        <div class="test-nav">
+          <button class="btn-outline" id="testPrev" onclick="prevQuestion()" style="display:none">← Anterior</button>
+          <button class="btn-primary" id="testNext" onclick="nextQuestion()">Siguiente →</button>
+        </div>
+      </div>
+      <div class="test-result" id="testResult">
+        <div class="result-emoji" id="resultEmoji"></div>
+        <div class="result-title" id="resultTitle"></div>
+        <div class="result-desc" id="resultDesc"></div>
+        
+        <h4 style="color:var(--white); margin:1.5rem 0 0.8rem; font-family:'Syne',sans-serif;">Carreras Sugeridas:</h4>
+        <div class="result-careers" id="resultCareers"></div>
+
+        <h4 style="color:var(--white); margin:1.5rem 0 0.8rem; font-family:'Syne',sans-serif;">Universidades Disponibles en Paraguay:</h4>
+        <div class="result-careers" id="resultUnis"></div>
+        <br/>
+        <button class="btn-outline" onclick="resetTest()" style="margin-top:1.5rem">Volver a hacer el test</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">Orion<span>Path</span></div>
+  <p class="footer-sub">Escuela Nacional de Comercio N°1 · Asunción, Paraguay</p>
+  <div class="footer-links">
+    <a href="#hero">Inicio</a>
+    <a href="#areas">Áreas</a>
+    <a href="#careers">Carreras</a>
+    <a href="#universities">Universidades</a>
+    <a href="#test">Test</a>
+    <a href="#fuentes">Fuentes</a>
+  </div>
+  <p class="footer-bottom">© OrionPath — Proyecto Educativo Especialidad Informática ENC1</p>
+</footer>
+
+<script>
+const careersData = [
+  { area: "tech", name: "Ingeniería en Informática", duration: "Duración referencial" },
+  { area: "tech", name: "Análisis de Sistemas", duration: "Duración referencial" },
+  { area: "tech", name: "Ciberseguridad", duration: "Duración referencial" },
+  { area: "tech", name: "Desarrollo de Software", duration: "Duración referencial" },
+  { area: "salud", name: "Medicina", duration: "Duración referencial" },
+  { area: "salud", name: "Enfermería", duration: "Duración referencial" },
+  { area: "salud", name: "Odontología", duration: "Duración referencial" },
+  { area: "salud", name: "Nutrición", duration: "Duración referencial" },
+  { area: "social", name: "Derecho", duration: "Duración referencial" },
+  { area: "social", name: "Psicología", duration: "Duración referencial" },
+  { area: "social", name: "Ciencias de la Comunicación", duration: "Duración referencial" },
+  { area: "social", name: "Ciencias Políticas", duration: "Duración referencial" },
+  { area: "admin", name: "Administración de Empresas", duration: "Duración referencial" },
+  { area: "admin", name: "Contabilidad Pública", duration: "Duración referencial" },
+  { area: "admin", name: "Marketing", duration: "Duración referencial" },
+  { area: "admin", name: "Comercio Internacional", duration: "Duración referencial" },
+  { area: "arte", name: "Diseño Gráfico", duration: "Duración referencial" },
+  { area: "arte", name: "Arquitectura", duration: "Duración referencial" },
+  { area: "arte", name: "Artes Audiovisuales", duration: "Duración referencial" },
+  { area: "exactas", name: "Ingeniería Civil", duration: "Duración referencial" },
+  { area: "exactas", name: "Biotecnología", duration: "Duración referencial" },
+  { area: "exactas", name: "Biología", duration: "Duración referencial" }
+];
+
+const resultsInfo = {
+  tech: {
+    emoji: "💻",
+    title: "Tecnología e Informática",
+    desc: "Tenés una mente lógica, orientada a la resolución de problemas y la innovación digital.",
+    careers: ["Ingeniería en Informática", "Análisis de Sistemas", "Ciberseguridad", "Desarrollo de Software"],
+    unis: ["UNA (Politécnica)", "UCA", "UNINORTE", "COLUMBIA"]
+  },
+  salud: {
+    emoji: "⚕️",
+    title: "Ciencias de la Salud",
+    desc: "Tu vocación está claramente guiada por la empatía, el cuidado y el bienestar de los demás.",
+    careers: ["Medicina", "Enfermería", "Odontología", "Nutrición"],
+    unis: ["UNA (Medicina)", "UCA", "UNIBE", "UPAP"]
+  },
+  social: {
+    emoji: "⚖️",
+    title: "Ciencias Sociales y Jurídicas",
+    desc: "Te apasiona la justicia, la comunicación y el análisis del comportamiento humano.",
+    careers: ["Derecho", "Psicología", "Ciencias Políticas", "Comunicación"],
+    unis: ["UNA (Derecho)", "UCA", "UNIBE", "UNINORTE"]
+  },
+  admin: {
+    emoji: "📊",
+    title: "Administración y Negocios",
+    desc: "Tenés visión estratégica, capacidad organizativa y espíritu emprendedor.",
+    careers: ["Administración de Empresas", "Contabilidad", "Marketing", "Comercio Internacional"],
+    unis: ["UNA (Económicas)", "UCA", "COLUMBIA", "UNINORTE"]
+  },
+  arte: {
+    emoji: "🎨",
+    title: "Arte y Diseño",
+    desc: "Destacás por tu creatividad, pensamiento visual y capacidad estética.",
+    careers: ["Diseño Gráfico", "Arquitectura", "Diseño Industrial", "Artes Audiovisuales"],
+    unis: ["UNA (FADA)", "UCA", "COLUMBIA"]
+  },
+  exactas: {
+    emoji: "🔬",
+    title: "Ciencias Exactas y Naturales",
+    desc: "Te caracteriza la curiosidad científica, el rigor analítico y la pasión por el descubrimiento.",
+    careers: ["Ingeniería Civil", "Química Pura", "Biología", "Biotecnología"],
+    unis: ["UNA (FACEN/FIUNA)", "UCA"]
+  }
+};
+
+const questions = [
+  { q:"1. ¿Qué actividad te resulta más interesante?", opts:[{text:"Crear soluciones con tecnología",area:"tech"},{text:"Cuidar y ayudar a personas",area:"salud"},{text:"Comprender a las personas y la sociedad",area:"social"},{text:"Organizar proyectos y negocios",area:"admin"},{text:"Crear diseños, imágenes o contenido",area:"arte"},{text:"Investigar fenómenos y resolver problemas",area:"exactas"}]},
+  { q:"2. ¿Qué tipo de problema preferís resolver?", opts:[{text:"Uno técnico o digital",area:"tech"},{text:"Uno relacionado con el bienestar",area:"salud"},{text:"Uno humano o social",area:"social"},{text:"Uno de organización o gestión",area:"admin"},{text:"Uno que requiera creatividad",area:"arte"},{text:"Uno que requiera análisis y cálculos",area:"exactas"}]},
+  { q:"3. ¿Qué actividad escolar disfrutás más?", opts:[{text:"Informática o programación",area:"tech"},{text:"Biología o temas de salud",area:"salud"},{text:"Historia, lengua o ciencias sociales",area:"social"},{text:"Economía, contabilidad o administración",area:"admin"},{text:"Arte, diseño o producción audiovisual",area:"arte"},{text:"Matemática, física o química",area:"exactas"}]},
+  { q:"4. ¿Cómo preferís trabajar?", opts:[{text:"Con computadoras y sistemas",area:"tech"},{text:"En contacto directo con personas",area:"salud"},{text:"Conversando, investigando o argumentando",area:"social"},{text:"Coordinando equipos y recursos",area:"admin"},{text:"Creando y experimentando visualmente",area:"arte"},{text:"Analizando datos, materiales o fenómenos",area:"exactas"}]},
+  { q:"5. ¿Qué cualidad sentís más cercana a vos?", opts:[{text:"Lógica",area:"tech"},{text:"Empatía",area:"salud"},{text:"Comunicación",area:"social"},{text:"Organización",area:"admin"},{text:"Creatividad",area:"arte"},{text:"Razonamiento analítico",area:"exactas"}]},
+  { q:"6. ¿Qué proyecto te gustaría realizar?", opts:[{text:"Crear una aplicación o página web",area:"tech"},{text:"Participar en una campaña de prevención",area:"salud"},{text:"Investigar un problema de la comunidad",area:"social"},{text:"Crear y administrar un emprendimiento",area:"admin"},{text:"Diseñar una campaña visual",area:"arte"},{text:"Realizar una investigación científica",area:"exactas"}]},
+  { q:"7. ¿Qué entorno te atrae más?", opts:[{text:"Laboratorio tecnológico o empresa de software",area:"tech"},{text:"Hospital, clínica o centro de salud",area:"salud"},{text:"Institución pública, estudio u organización social",area:"social"},{text:"Empresa, banco o emprendimiento",area:"admin"},{text:"Estudio creativo, agencia o productora",area:"arte"},{text:"Laboratorio, industria o centro de investigación",area:"exactas"}]},
+  { q:"8. Cuando aprendés algo nuevo, preferís...", opts:[{text:"Probarlo en una herramienta digital",area:"tech"},{text:"Aplicarlo para ayudar a alguien",area:"salud"},{text:"Conversarlo y relacionarlo con la sociedad",area:"social"},{text:"Pensar cómo podría organizarse o gestionarse",area:"admin"},{text:"Transformarlo en una creación",area:"arte"},{text:"Comprobarlo mediante datos o experimentos",area:"exactas"}]},
+  { q:"9. ¿Qué resultado te daría más satisfacción?", opts:[{text:"Hacer que un sistema funcione",area:"tech"},{text:"Mejorar el bienestar de una persona",area:"salud"},{text:"Resolver un conflicto o comunicar una idea",area:"social"},{text:"Lograr que un proyecto alcance sus objetivos",area:"admin"},{text:"Crear algo original y atractivo",area:"arte"},{text:"Descubrir o explicar cómo funciona algo",area:"exactas"}]},
+  { q:"10. ¿Qué desafío elegirías?", opts:[{text:"Diseñar una solución digital",area:"tech"},{text:"Resolver una situación relacionada con salud",area:"salud"},{text:"Analizar una problemática social",area:"social"},{text:"Mejorar la organización de una empresa",area:"admin"},{text:"Crear una identidad visual",area:"arte"},{text:"Analizar resultados de un experimento",area:"exactas"}]},
+  { q:"11. ¿Qué tipo de conocimiento te gustaría profundizar?", opts:[{text:"Programación y tecnología",area:"tech"},{text:"Cuerpo humano y salud",area:"salud"},{text:"Sociedad, comunicación y comportamiento",area:"social"},{text:"Empresas, finanzas y gestión",area:"admin"},{text:"Diseño, arte y medios",area:"arte"},{text:"Ciencia, matemática y naturaleza",area:"exactas"}]},
+  { q:"12. Pensando en tu futuro, ¿qué te gustaría aportar?", opts:[{text:"Innovación y soluciones tecnológicas",area:"tech"},{text:"Cuidado y bienestar",area:"salud"},{text:"Justicia, comunicación o transformación social",area:"social"},{text:"Gestión, crecimiento y emprendimiento",area:"admin"},{text:"Creatividad y expresión",area:"arte"},{text:"Conocimiento y descubrimiento científico",area:"exactas"}]}
+];
+
+let currentQ = 0;
+let userAnswers = [];
+
+function loadQuestion() {
+  const qData = questions[currentQ];
+  document.getElementById('testQuestion').innerText = qData.q;
+  const optsContainer = document.getElementById('testOptions');
+  optsContainer.innerHTML = '';
+  
+  qData.opts.forEach((opt, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'test-option' + (userAnswers[currentQ] === opt.area ? ' selected' : '');
+    btn.innerText = opt.text;
+    btn.onclick = () => selectOption(opt.area, btn);
+    optsContainer.appendChild(btn);
+  });
+
+  const pct = ((currentQ) / questions.length) * 100;
+  document.getElementById('testProgress').style.width = pct + '%';
+  document.getElementById('testPrev').style.display = currentQ > 0 ? 'inline-block' : 'none';
+  document.getElementById('testNext').innerText = currentQ === questions.length - 1 ? 'Finalizar' : 'Siguiente →';
+}
+
+function selectOption(area, btnElement) {
+  userAnswers[currentQ] = area;
+  const allOpts = document.querySelectorAll('.test-option');
+  allOpts.forEach(b => b.classList.remove('selected'));
+  btnElement.classList.add('selected');
+}
+
+function nextQuestion() {
+  if (!userAnswers[currentQ]) {
+    alert('Por favor elegí una opción antes de continuar.');
+    return;
+  }
+  if (currentQ < questions.length - 1) {
+    currentQ++;
+    loadQuestion();
+  } else {
+    showResult();
+  }
+}
+
+function prevQuestion() {
+  if (currentQ > 0) {
+    currentQ--;
+    loadQuestion();
+  }
+}
+
+function showResult() {
+  document.getElementById('testProgress').style.width = '100%';
+  document.getElementById('testContent').style.display = 'none';
+  const counts = {};
+  userAnswers.forEach(a => counts[a] = (counts[a] || 0) + 1);
+  const sorted = Object.entries(counts).sort((a,b) => b[1] - a[1]);
+  const topScore = sorted[0]?.[1] || 0;
+  const topAreas = sorted.filter(([area,score]) => score === topScore).map(([area]) => area);
+  const topArea = topAreas[0] || 'social';
+  const res = resultsInfo[topArea];
+  const tieText = topAreas.length > 1 ? ` También aparecen afinidades con ${topAreas.slice(1).map(a => resultsInfo[a].title).join(' y ')}.` : '';
+  document.getElementById('resultEmoji').innerText = res.emoji;
+  document.getElementById('resultTitle').innerText = res.title;
+  document.getElementById('resultDesc').innerText = res.desc + tieText;
+  document.getElementById('resultCareers').innerHTML = res.careers.map(c => `<span class="result-tag">${c}</span>`).join('');
+  document.getElementById('resultUnis').innerHTML = res.unis.map(u => `<span class="result-tag">${u}</span>`).join('');
+  document.getElementById('testResult').style.display = 'block';
+}
+
+function resetTest() {
+  currentQ = 0; userAnswers = [];
+  document.getElementById('testResult').style.display = 'none';
+  document.getElementById('testContent').style.display = 'block';
+  loadQuestion();
+}
+
+function renderCareers(list) {
+  const grid = document.getElementById('careersGrid');
+  grid.innerHTML = '';
+  if (!list.length) { grid.innerHTML = '<p style="opacity:.65">No encontramos una carrera con esa búsqueda.</p>'; return; }
+  list.forEach(c => {
+    const card = document.createElement('article');
+    card.className = 'career-card';
+    card.innerHTML = `<div class="career-area-tag">${areaLabels[c.area]}</div><div class="career-name">${c.name}</div><div class="career-duration">${c.duration}</div>`;
+    grid.appendChild(card);
+  });
+}
+
+const areaLabels = {tech:'Tecnología',salud:'Salud',social:'Sociales',admin:'Administración',arte:'Arte',exactas:'Exactas'};
+let activeCareerArea = 'all';
+function filterCareers(area, btn) {
+  activeCareerArea = area;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  const query = document.getElementById('careerSearch')?.value || '';
+  const filtered = careersData.filter(c => (area === 'all' || c.area === area) && c.name.toLowerCase().includes(query.toLowerCase()));
+  renderCareers(filtered);
+}
+
+function searchCareers(query) {
+  const filtered = careersData.filter(c => (activeCareerArea === 'all' || c.area === activeCareerArea) && c.name.toLowerCase().includes(query.toLowerCase()));
+  renderCareers(filtered);
+}
+
+function toggleMobile() {
+  const menu = document.getElementById('mobileMenu'); menu.classList.toggle('open'); document.getElementById('hamburger').setAttribute('aria-expanded', menu.classList.contains('open'));
+}
+
+function closeMobile() {
+  document.getElementById('mobileMenu').classList.remove('open');
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  loadQuestion();
+  filterCareers('all', document.querySelector('.filter-btn'));
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+});
+</script>
+</body>
+</html>
