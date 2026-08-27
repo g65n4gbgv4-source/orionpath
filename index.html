@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>OrionPath — Tu camino hacia el futuro</title>
+
+<!-- Tipografías de Google Fonts: 'Syne' para títulos, 'DM Sans' para texto -->
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+
+<!-- Todos los estilos del sitio viven en este archivo externo -->
+<link rel="stylesheet" href="css/styles.css"/>
+</head>
+<body>
+
+<!-- Canvas de fondo (decorativo, reservado para una futura animación de estrellas) -->
+<canvas id="stars-canvas"></canvas>
+
+<!-- ==========================================================
+     BARRA DE NAVEGACIÓN
+     "Contacto" fue eliminado del menú a pedido.
+     ========================================================== -->
+<nav id="navbar">
+  <div class="nav-logo">Orion<span>Path</span></div>
+  <ul class="nav-links">
+    <li><a href="#hero">Inicio</a></li>
+    <li><a href="#areas">Áreas</a></li>
+    <li><a href="#careers">Carreras</a></li>
+    <li><a href="#universities">Universidades</a></li>
+    <li><a href="#howto">¿Cómo ingresar?</a></li>
+    <li><a href="#test">Test</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" onclick="toggleMobile()"><span></span><span></span><span></span></button>
+</nav>
+
+<!-- Menú a pantalla completa que se muestra en celulares -->
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-close" id="mobileClose" onclick="closeMobile()">✕</button>
+  <a href="#hero" onclick="closeMobile()">Inicio</a>
+  <a href="#areas" onclick="closeMobile()">Áreas</a>
+  <a href="#careers" onclick="closeMobile()">Carreras</a>
+  <a href="#universities" onclick="closeMobile()">Universidades</a>
+  <a href="#howto" onclick="closeMobile()">¿Cómo ingresar?</a>
+  <a href="#test" onclick="closeMobile()">Test Vocacional</a>
+</div>
+
+<!-- ==========================================================
+     HERO — portada principal
+     ========================================================== -->
+<section id="hero">
+  <p class="hero-eyebrow">Escuela Nacional de Comercio N°1 · Asunción, Paraguay</p>
+  <h1 class="hero-title">Tu<br/><span class="accent">camino</span><br/>comienza<br/>aquí.</h1>
+  <p class="hero-subtitle">OrionPath es tu guía de orientación vocacional. Explorá carreras, conocé universidades y descubrí hacia dónde apuntan tus estrellas.</p>
+  <div class="hero-cta">
+    <a href="#test" class="btn-primary">Hacer el test vocacional</a>
+    <a href="#careers" class="btn-outline">Explorar carreras</a>
+  </div>
+  <div class="scroll-indicator"><span></span><div class="scroll-line"></div></div>
+</section>
+
+<!-- ==========================================================
+     SOBRE ORIONPATH — presentación del proyecto + anillos animados
+     ========================================================== -->
+<section>
+  <div id="about">
+    <div class="about-visual">
+      <div class="orion-ring"></div>
+      <div class="orion-ring"></div>
+      <div class="orion-ring"></div>
+      <div class="orion-core"></div>
+      <div class="star-dot" style="top:20%;left:15%;animation:float 3s ease-in-out infinite"></div>
+      <div class="star-dot" style="top:70%;left:80%;animation:float 4s ease-in-out .5s infinite;width:6px;height:6px"></div>
+      <div class="star-dot" style="top:85%;left:20%;animation:float 3.5s ease-in-out 1s infinite"></div>
+      <div class="star-dot" style="top:10%;left:75%;animation:float 5s ease-in-out .2s infinite;width:3px;height:3px;opacity:.5"></div>
+    </div>
+    <div class="reveal">
+      <p class="section-label">Sobre OrionPath</p>
+      <h2 class="section-title">Orientación vocacional para la generación digital</h2>
+      <div class="divider"></div>
+      <p class="section-desc">OrionPath es un proyecto educativo desarrollado por estudiantes de la Especialidad Informática de la ENC1, del 3er curso, diseñado para acompañar a sus compañeros en uno de los momentos más importantes de su vida: la elección de carrera.</p>
+      <br/>
+      <p class="section-desc">Así como Orión guía a los navegantes en la oscuridad, esta plataforma busca iluminar el camino hacia el futuro académico y profesional de cada estudiante.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div id="areas">
+    <div class="reveal">
+      <p class="section-label">Áreas de estudio</p>
+      <h2 class="section-title">¿Qué te apasiona?</h2>
+      <div class="divider"></div>
+      <p class="section-desc">Cada persona tiene una inclinación natural. Conocé las grandes áreas del conocimiento y encontrá la tuya.</p>
+    </div>
+    <div class="areas-grid">
+
+      <div class="area-card reveal">
+        <div class="area-icon">💻</div>
+        <div class="area-name">Tecnología e Informática</div>
+        <div class="area-desc">Programación, ciberseguridad, inteligencia artificial, redes y desarrollo de software. El área con mayor demanda laboral del siglo XXI.</div>
+      </div>
+
+      <div class="area-card reveal">
+        <div class="area-icon">⚕️</div>
+        <div class="area-name">Ciencias de la Salud</div>
+        <div class="area-desc">Medicina, enfermería, odontología, nutrición y farmacia. Vocaciones orientadas al cuidado y bienestar humano.</div>
+      </div>
+
+      <div class="area-card reveal">
+        <div class="area-icon">⚖️</div>
+        <div class="area-name">Ciencias Sociales y Jurídicas</div>
+        <div class="area-desc">Derecho, ciencias políticas, trabajo social, psicología y comunicación. Transformar la sociedad desde adentro.</div>
+      </div>
+
+      <div class="area-card reveal">
+        <div class="area-icon">📊</div>
+        <div class="area-name">Administración y Negocios</div>
+        <div class="area-desc">Contabilidad, administración de empresas, marketing, comercio internacional y economía.</div>
+      </div>
+
+      <div class="area-card reveal">
+        <div class="area-icon">🎨</div>
+        <div class="area-name">Arte y Diseño</div>
+        <div class="area-desc">Diseño gráfico, arquitectura, comunicación visual, artes plásticas y producción audiovisual.</div>
+      </div>
+
+      <div class="area-card reveal">
+        <div class="area-icon">🔬</div>
+        <div class="area-name">Ciencias Exactas y Naturales</div>
+        <div class="area-desc">Ingeniería, biología, química, física, agronomía y ciencias ambientales. Para mentes analíticas y curiosas.</div>
+      </div>
+
+      <!-- NUEVA ÁREA: Deporte -->
+      <div class="area-card reveal">
+        <div class="area-icon">🏅</div>
+        <div class="area-name">Deporte y Ciencias del Ejercicio</div>
+        <div class="area-desc">Educación física, kinesiología, entrenamiento deportivo y gestión de instituciones deportivas. Para quienes viven el movimiento y el rendimiento físico.</div>
+        <!-- Duración estimada, pedida específicamente para esta área -->
+        <span class="area-duration">Duración aprox: 4 a 5 años</span>      
+        <div class="area-unis">
+          <div class="area-unis-label">Dónde estudiar</div>
+          <div class="area-uni-tags">
+            <span class="area-uni-tag">UNA</span>
+            <span class="area-uni-tag">UNINORTE</span>
+            <span class="area-uni-tag">UAA</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- NUEVA TARJETA ESPECIAL: Estudiar en el exterior -->
+      <div class="area-card special reveal">
+        <div class="area-icon">🌎</div>
+        <div class="area-name">Estudiar en el Exterior</div>
+        <div class="area-desc">Algunas vocaciones, como la <strong>Biología Marina</strong>, no tienen oferta académica en Paraguay (país sin costa marítima). En esos casos, una alternativa es continuar los estudios en el exterior — por ejemplo en Argentina, Brasil o España — a través de programas de intercambio o becas como el BECAL.</div>
+        <span class="area-duration">Duración: variable según el país y la universidad</span>
+      </div>
+
+    </div>
+  </div>
+</section>
+caaaare
+<section>
+  <div id="careers">
+    <div class="reveal">
+      <p class="section-label">Carreras universitarias</p>
+      <h2 class="section-title">Explorá tus opciones</h2>
+      <div class="divider"></div>
+      <p class="section-desc">Filtrá por área y descubrí carreras disponibles en Paraguay con su duración aproximada.</p>
+    </div>
+    <div class="career-filters">
+      <button class="filter-btn active" onclick="filterCareers('all',this)">Todas</button>
+      <button class="filter-btn" onclick="filterCareers('tech',this)">Tecnología</button>
+      <button class="filter-btn" onclick="filterCareers('salud',this)">Salud</button>
+      <button class="filter-btn" onclick="filterCareers('social',this)">Sociales</button>
+      <button class="filter-btn" onclick="filterCareers('admin',this)">Admin.</button>
+      <button class="filter-btn" onclick="filterCareers('arte',this)">Arte</button>
+      <button class="filter-btn" onclick="filterCareers('exactas',this)">Exactas</button>
+      <button class="filter-btn" onclick="filterCareers('deporte',this)">Deporte</button>
+    </div>
+    <!-- Este grid se llena dinámicamente desde js/app.js (filterCareers) -->
+    <div class="careers-grid" id="careersGrid"></div>
+  </div>
+</section>
+
+<!-- ==========================================================
+     UNIVERSIDADES DE PARAGUAY
+     ========================================================== -->
+<section>
+  <div id="universities">
+    <div class="reveal">
+      <p class="section-label">Universidades de Paraguay</p>
+      <h2 class="section-title">¿Dónde estudiar?</h2>
+      <div class="divider"></div>
+      <p class="section-desc">Conocé las principales instituciones de educación superior del país, tanto públicas como privadas.</p>
+    </div>
+    <div class="uni-grid">
+      <div class="uni-card reveal"><div class="uni-sigla">UNA</div><div class="uni-name">Universidad Nacional de Asunción</div><span class="uni-type publica">Pública</span><div class="uni-desc">La universidad más grande y antigua del Paraguay, fundada en 1889. Ofrece más de 70 carreras en todas las áreas del conocimiento. Ingreso mediante examen de admisión.</div></div>
+      <div class="uni-card reveal"><div class="uni-sigla">UCA</div><div class="uni-name">Universidad Católica "Ntra. Sra. de la Asunción"</div><span class="uni-type privada">Privada</span><div class="uni-desc">Una de las universidades privadas más reconocidas del país. Fuerte presencia en derecho, educación y ciencias sociales. Becas disponibles.</div></div>
+      <div class="uni-card reveal"><div class="uni-sigla">UPAP</div><div class="uni-name">Universidad Politécnica y Artística del Paraguay</div><span class="uni-type privada">Privada</span><div class="uni-desc">Reconocida por sus facultades de medicina y ciencias de la salud. Cuenta con amplia oferta académica a nivel nacional.</div></div>
+      <div class="uni-card reveal"><div class="uni-sigla">UNI NORTE</div><div class="uni-name">Universidad del Norte</div><span class="uni-type privada">Privada</span><div class="uni-desc">Fuerte en administración, derecho y tecnología. Convenios internacionales y bolsa de trabajo activa para egresados.</div></div>
+      <div class="uni-card reveal"><div class="uni-sigla">UNIBE</div><div class="uni-name">Universidad Iberoamericana</div><span class="uni-type privada">Privada</span><div class="uni-desc">Especializada en ciencias de la salud y ciencias jurídicas. Infraestructura moderna y enfoque práctico.</div></div>
+      <div class="uni-card reveal"><div class="uni-sigla">UAA</div><div class="uni-name">Universidad Autónoma de Asunción</div><span class="uni-type privada">Privada</span><div class="uni-desc">Oferta académica orientada a ciencias de la salud y del deporte, entre otras áreas. Buena opción para kinesiología y ciencias del ejercicio.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================================
+     ¿CÓMO INGRESAR? — línea de tiempo con pasos
+     ========================================================== -->
+<section>
+  <div id="howto">
+    <div class="reveal">
+      <p class="section-label">¿Cómo ingresar a la universidad?</p>
+      <h2 class="section-title">Tu hoja de ruta</h2>
+      <div class="divider"></div>
+      <p class="section-desc">El proceso puede parecer complejo, pero con información clara se vuelve mucho más sencillo.</p>
+    </div>
+    <div class="steps">
+      <div class="step reveal"><div class="step-num">01</div><div class="step-content"><div class="step-title">Elegí tu área y carrera</div><div class="step-text">Usá el test vocacional y explorá las secciones de carreras y áreas para identificar qué te apasiona. Investigá las salidas laborales y el mercado de trabajo en Paraguay.</div></div></div>
+      <div class="step reveal"><div class="step-num">02</div><div class="step-content"><div class="step-title">Investigá las instituciones</div><div class="step-text">Compará universidades: duración de la carrera, modalidad (presencial/semipresencial), costo de la matrícula y cuota mensual, y si cuentan con becas o financiamiento.</div></div></div>
+      <div class="step reveal"><div class="step-num">03</div><div class="step-content"><div class="step-title">Preparate para el ingreso</div><div class="step-text">Las universidades públicas como la UNA requieren examen de admisión. Preparate con antelación. Las privadas generalmente solo piden documentación y entrevista.</div></div></div>
+      <div class="step reveal"><div class="step-num">04</div><div class="step-content"><div class="step-title">Reuní tu documentación</div><div class="step-text">Generalmente necesitás: cédula de identidad, certificado de bachillerato, certificado de notas y fotos carnet. Consultá cada institución para requisitos específicos.</div></div></div>
+      <div class="step reveal"><div class="step-num">05</div><div class="step-content"><div class="step-title">Buscá becas y financiamiento</div><div class="step-text">El BECAL (Becas Carlos Antonio López) ofrece financiamiento para estudios superiores, incluso en el exterior. Muchas universidades tienen además programas de becas internas por rendimiento académico.</div></div></div>
+      <div class="step reveal"><div class="step-num">06</div><div class="step-content"><div class="step-title">¡Inscribite y comenzá!</div><div class="step-text">Una vez aprobado el ingreso, completá la inscripción en los plazos establecidos. Organizá bien tu tiempo desde el primer día — el comienzo marca la diferencia.</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================================
+     TEST VOCACIONAL
+     El HTML solo define los "contenedores" vacíos (testQuestion,
+     testOptions, etc.); todo el contenido se rellena dinámicamente
+     desde js/app.js usando las preguntas de js/data.js.
+     ========================================================== -->
+<section>
+  <div id="test">
+    <div class="reveal">
+      <p class="section-label">Test Vocacional</p>
+      <h2 class="section-title">¿Hacia dónde apuntan tus estrellas?</h2>
+      <div class="divider" style="margin:1.2rem auto 1.8rem"></div>
+      <p class="section-desc" style="margin:0 auto">Respondé estas preguntas sobre tus intereses y habilidades para descubrir el área profesional que mejor se adapta a tu perfil.</p>
+    </div>
+    <div class="test-box reveal">
+      <div class="test-progress-bar"><div class="test-progress-fill" id="testProgress"></div></div>
+
+      <div id="testContent">
+        <div class="test-question" id="testQuestion"></div>
+        <div class="test-options" id="testOptions"></div>
+        <div class="test-nav">
+          <button class="btn-outline" id="testPrev" onclick="prevQuestion()" style="display:none">← Anterior</button>
+          <button class="btn-primary" id="testNext" onclick="nextQuestion()">Siguiente →</button>
+        </div>
+      </div>
+
+      <div class="test-result" id="testResult">
+        <div class="result-emoji" id="resultEmoji"></div>
+        <div class="result-title" id="resultTitle"></div>
+        <div class="result-desc" id="resultDesc"></div>
+
+        <h4 style="color:var(--white); margin:1.5rem 0 0.8rem; font-family:'Syne',sans-serif;">Carreras Sugeridas:</h4>
+        <div class="result-careers" id="resultCareers"></div>
+
+        <h4 style="color:var(--white); margin:1.5rem 0 0.8rem; font-family:'Syne',sans-serif;">Universidades Disponibles en Paraguay:</h4>
+        <div class="result-careers" id="resultUnis"></div>
+        <br/>
+        <button class="btn-outline" onclick="resetTest()" style="margin-top:1.5rem">Volver a hacer el test</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================================
+     FOOTER
+     (La sección "Contacto" fue eliminada por completo a pedido:
+     no había ningún formulario funcional, solo un link roto que
+     apuntaba a una sección inexistente.)
+     ========================================================== -->
+<footer>
+  <div class="footer-logo">Orion<span>Path</span></div>
+  <p class="footer-sub">Escuela Nacional de Comercio N°1 · Asunción, Paraguay</p>
+  <div class="footer-links">
+    <a href="#hero">Inicio</a>
+    <a href="#areas">Áreas</a>
+    <a href="#careers">Carreras</a>
+    <a href="#universities">Universidades</a>
+    <a href="#test">Test</a>
+  </div>
+  <p class="footer-bottom">© OrionPath — Proyecto Educativo Especialidad Informática ENC1</p>
+</footer>
+
+<!-- ==========================================================
+     SCRIPTS
+     Orden importante: primero los datos (data.js), después la
+     lógica que los usa (app.js).
+     ========================================================== -->
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

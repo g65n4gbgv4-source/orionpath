@@ -1,0 +1,342 @@
+/* ==========================================================================
+   ORIONPATH — HOJA DE ESTILOS (styles.css)
+   --------------------------------------------------------------------------
+   Este archivo se divide en las siguientes partes, en este orden:
+   1. Variables de color y reset general
+   2. Barra de navegación (nav) + menú móvil
+   3. Sección Hero (portada)
+   4. Estilos generales de "sección" (título, descripción, divisor)
+   5. Sección "Sobre OrionPath" (about) — el anillo animado tipo Orión
+   6. Sección "Áreas de estudio" (areas)
+   7. Sección "Carreras" (careers) + filtros
+   8. Sección "Universidades" (universities)
+   9. Sección "¿Cómo ingresar?" (howto) — línea de tiempo con pasos
+   10. Sección "Test vocacional" (test)
+   11. Footer
+   12. Animaciones (@keyframes)
+   13. Responsive (media queries)
+   ========================================================================== */
+
+
+/* --------------------------------------------------------------------------
+   1. VARIABLES DE COLOR Y RESET GENERAL
+   --------------------------------------------------------------------------
+   :root define "variables CSS" (custom properties). Cambiar un color acá
+   lo cambia en TODO el sitio, porque el resto del CSS usa var(--nombre).
+-------------------------------------------------------------------------- */
+:root{
+  --periwinkle:#E3D9FC;  /* texto claro / lila principal */
+  --magenta:#9d4cc2;     /* color de acento (botones, íconos, hover) */
+  --blue:#4928C2;        /* color secundario (tarjetas de carreras) */
+  --velvet:#5B2A62;      /* morado oscuro (fondos de tarjetas) */
+  --black:#040607;       /* fondo general del sitio */
+  --white:#f8f4ff;       /* blanco cálido para títulos */
+}
+
+/* Reset básico: quita márgenes/paddings por defecto del navegador
+   y hace que el "box-sizing" sea predecible en todos los elementos. */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+/* Hace que los links internos (#areas, #test, etc.) se desplacen
+   con una animación suave en lugar de saltar de golpe. */
+html{scroll-behavior:smooth}
+
+body{
+  background:var(--black);
+  color:var(--periwinkle);
+  font-family:'DM Sans',sans-serif;
+  overflow-x:hidden; /* evita scroll horizontal por animaciones/decoraciones */
+}
+
+/* Canvas de fondo (actualmente decorativo/vacío: no tiene JS que dibuje
+   estrellas todavía, queda preparado por si se agrega esa animación). */
+#stars-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
+
+
+/* --------------------------------------------------------------------------
+   2. BARRA DE NAVEGACIÓN (NAV) + MENÚ MÓVIL
+-------------------------------------------------------------------------- */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1.2rem 3rem;
+  background:rgba(4,6,7,.7);
+  backdrop-filter:blur(16px); /* efecto "vidrio esmerilado" al hacer scroll */
+  border-bottom:1px solid rgba(191,64,250,.15);
+  transition:all .3s;
+}
+.nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.5rem;color:var(--white);letter-spacing:-.02em}
+.nav-logo span{color:var(--magenta)} /* la parte "Path" del logo en magenta */
+
+.nav-links{display:flex;gap:2rem;list-style:none}
+.nav-links a{color:var(--periwinkle);text-decoration:none;font-size:.85rem;font-weight:500;letter-spacing:.05em;text-transform:uppercase;opacity:.7;transition:opacity .2s,color .2s}
+.nav-links a:hover{opacity:1;color:var(--magenta)}
+
+/* Botón hamburguesa: solo se muestra en pantallas chicas (ver media query) */
+.hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px}
+.hamburger span{display:block;width:24px;height:2px;background:var(--periwinkle);border-radius:2px;transition:all .3s}
+
+/* Menú a pantalla completa que aparece en celulares al tocar el hamburguesa.
+   Se activa/desactiva agregando o quitando la clase "open" vía JavaScript
+   (funciones toggleMobile() / closeMobile() en js/app.js). */
+.mobile-menu{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(4,6,7,.97);z-index:99;flex-direction:column;align-items:center;justify-content:center;gap:2.5rem}
+.mobile-menu.open{display:flex}
+.mobile-menu a{font-family:'Syne',sans-serif;font-size:2rem;font-weight:700;color:var(--periwinkle);text-decoration:none;transition:color .2s}
+.mobile-menu a:hover{color:var(--magenta)}
+.mobile-close{position:absolute;top:1.5rem;right:2rem;background:none;border:none;color:var(--periwinkle);font-size:2rem;cursor:pointer}
+
+/* Todas las <section> comparten este espaciado base */
+section{position:relative;z-index:1;padding:7rem 2rem}
+
+
+/* --------------------------------------------------------------------------
+   3. SECCIÓN HERO (PORTADA)
+-------------------------------------------------------------------------- */
+#hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 2rem;overflow:hidden}
+.hero-eyebrow{font-size:.75rem;letter-spacing:.25em;text-transform:uppercase;color:var(--magenta);margin-bottom:1.5rem;opacity:0;animation:fadeUp .8s .3s forwards}
+.hero-title{font-family:'Syne',sans-serif;font-size:clamp(3.5rem,12vw,8rem);font-weight:800;line-height:.92;letter-spacing:-.03em;color:var(--white);opacity:0;animation:fadeUp .8s .5s forwards;margin-bottom:.3rem}
+.hero-title .accent{color:var(--magenta)}
+.hero-subtitle{font-size:clamp(1rem,2.5vw,1.3rem);color:var(--periwinkle);opacity:0;animation:fadeUp .8s .7s forwards;max-width:520px;margin:1.5rem auto 2.5rem;line-height:1.6;font-weight:300}
+.hero-cta{display:inline-flex;gap:1rem;opacity:0;animation:fadeUp .8s .9s forwards;flex-wrap:wrap;justify-content:center}
+
+/* Botón sólido (relleno magenta) — se usa para la acción principal */
+.btn-primary{padding:.9rem 2.2rem;background:var(--magenta);color:var(--black);font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;letter-spacing:.04em;border:none;border-radius:100px;text-decoration:none;transition:transform .2s,box-shadow .2s;cursor:pointer;display:inline-block}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 0 32px rgba(191,64,250,.5)}
+
+/* Botón con borde (acción secundaria) */
+.btn-outline{padding:.9rem 2.2rem;border:1.5px solid rgba(191,64,250,.5);color:var(--periwinkle);font-family:'Syne',sans-serif;font-weight:600;font-size:.9rem;letter-spacing:.04em;border-radius:100px;text-decoration:none;transition:border-color .2s,color .2s;cursor:pointer;display:inline-block;background:none}
+.btn-outline:hover{border-color:var(--magenta);color:var(--magenta)}
+
+/* Indicador de "scrolleá" al pie del hero, con línea que pulsa */
+.scroll-indicator{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.5rem;opacity:0;animation:fadeIn 1s 1.5s forwards}
+.scroll-indicator span{font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;opacity:.4}
+.scroll-line{width:1px;height:48px;background:linear-gradient(to bottom,var(--magenta),transparent);animation:scrollPulse 1.5s ease-in-out infinite}
+
+
+/* --------------------------------------------------------------------------
+   4. ESTILOS GENERALES REUTILIZABLES DE "SECCIÓN"
+   (etiqueta pequeña + título grande + texto descriptivo + línea divisoria)
+   Se usan en casi todas las secciones del sitio.
+-------------------------------------------------------------------------- */
+.section-label{font-size:.7rem;letter-spacing:.3em;text-transform:uppercase;color:var(--magenta);margin-bottom:1rem;opacity:.8}
+.section-title{font-family:'Syne',sans-serif;font-size:clamp(2rem,5vw,3.5rem);font-weight:800;color:var(--white);line-height:1.05;letter-spacing:-.02em;margin-bottom:1.5rem}
+.section-desc{font-size:1rem;line-height:1.7;color:var(--periwinkle);opacity:.75;max-width:560px}
+.divider{width:60px;height:2px;background:linear-gradient(90deg,var(--magenta),transparent);margin:1.2rem 0 1.8rem}
+
+
+/* --------------------------------------------------------------------------
+   5. SECCIÓN "SOBRE ORIONPATH" (ABOUT)
+   Contiene el dibujo decorativo de anillos + núcleo que simula la
+   constelación de Orión, hecho solo con CSS (sin imágenes).
+-------------------------------------------------------------------------- */
+#about{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;max-width:1100px;margin:0 auto}
+.about-visual{position:relative;height:380px}
+
+/* Los 3 anillos giran a velocidades distintas para dar sensación de
+   profundidad (efecto "parallax" simple). */
+.orion-ring{position:absolute;border-radius:50%;border:1px solid rgba(191,64,250,.2);animation:spin linear infinite}
+.orion-ring:nth-child(1){width:200px;height:200px;top:90px;left:80px;animation-duration:20s}
+.orion-ring:nth-child(2){width:300px;height:300px;top:40px;left:30px;animation-duration:35s;animation-direction:reverse;border-color:rgba(73,40,194,.3)}
+.orion-ring:nth-child(3){width:380px;height:380px;top:0;left:-10px;animation-duration:55s;border-color:rgba(91,42,98,.2)}
+
+/* El "núcleo" brillante en el centro de los anillos */
+.orion-core{position:absolute;width:80px;height:80px;background:radial-gradient(circle,var(--magenta),var(--blue));border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%);box-shadow:0 0 60px rgba(191,64,250,.6),0 0 120px rgba(191,64,250,.2)}
+
+/* Puntitos de "estrella" que flotan sutilmente alrededor (float en @keyframes) */
+.star-dot{position:absolute;width:4px;height:4px;background:var(--magenta);border-radius:50%;box-shadow:0 0 6px var(--magenta)}
+
+
+/* --------------------------------------------------------------------------
+   6. SECCIÓN "ÁREAS DE ESTUDIO"
+   Grilla de tarjetas (una por área vocacional). El HTML se arma a mano
+   en index.html porque son solo 8 tarjetas fijas (no hace falta JS).
+-------------------------------------------------------------------------- */
+#areas{max-width:1100px;margin:0 auto}
+.areas-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.5rem;margin-top:3rem}
+
+.area-card{
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(191,64,250,.12);
+  border-radius:20px;
+  padding:2rem;
+  /* Ya NO animamos "transform/border-color/background" en :hover
+     (ver más abajo) para que la tarjeta no "brille" ni salte al pasar
+     el mouse — esto era lo que confundía a los usuarios. */
+  transition:none;
+}
+/* Antes esta regla cambiaba el borde a magenta brillante, el fondo y
+   levantaba la tarjeta con translateY. Se eliminó a pedido: al pasar
+   el cursor sobre un área, la tarjeta se queda tal cual (sin "brillo"). */
+.area-card:hover{
+  /* intencionalmente vacío: sin efecto de hover */
+}
+
+.area-icon{font-size:2.2rem;margin-bottom:1rem}
+.area-name{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;color:var(--white);margin-bottom:.5rem}
+.area-desc{font-size:.875rem;line-height:1.6;color:var(--periwinkle);opacity:.65}
+
+/* --- Elementos nuevos, usados solo en la tarjeta de "Deporte" --- */
+/* Chip que muestra la duración estimada de carrera dentro de la tarjeta */
+.area-duration{
+  display:inline-block;
+  margin-top:.9rem;
+  padding:.3rem .8rem;
+  border-radius:100px;
+  font-size:.72rem;
+  letter-spacing:.05em;
+  background:rgba(191,64,250,.12);
+  color:var(--magenta);
+  border:1px solid rgba(191,64,250,.25);
+}
+/* Bloque "Dónde estudiar" con mini-etiquetas de universidades */
+.area-unis{margin-top:1rem}
+.area-unis-label{font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;opacity:.5;margin-bottom:.5rem}
+.area-uni-tags{display:flex;flex-wrap:wrap;gap:.4rem}
+.area-uni-tag{
+  font-size:.72rem;
+  padding:.3rem .7rem;
+  border-radius:100px;
+  background:rgba(73,40,194,.18);
+  color:#b9a8f7;
+  border:1px solid rgba(73,40,194,.35);
+}
+
+/* Tarjeta especial "Estudiar en el exterior": mismo estilo base que
+   .area-card pero con borde punteado, para distinguirla visualmente
+   como una opción "complementaria" y no un área vocacional más. */
+.area-card.special{
+  border-style:dashed;
+  border-color:rgba(191,64,250,.3);
+  background:rgba(191,64,250,.03);
+}
+
+
+/* --------------------------------------------------------------------------
+   7. SECCIÓN "CARRERAS" + FILTROS
+   Los botones de filtro y las tarjetas de carrera se generan con
+   JavaScript a partir del arreglo careersData (ver js/data.js).
+-------------------------------------------------------------------------- */
+#careers{max-width:1100px;margin:0 auto}
+.career-filters{display:flex;gap:.75rem;flex-wrap:wrap;margin:2rem 0}
+.filter-btn{padding:.5rem 1.2rem;border-radius:100px;border:1px solid rgba(191,64,250,.25);background:transparent;color:var(--periwinkle);font-family:'DM Sans',sans-serif;font-size:.8rem;letter-spacing:.04em;cursor:pointer;transition:all .2s}
+/* El filtro activo (o el que se está tocando) se pinta magenta sólido */
+.filter-btn.active,.filter-btn:hover{background:var(--magenta);border-color:var(--magenta);color:var(--black)}
+
+.careers-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem}
+.career-card{background:rgba(255,255,255,.03);border:1px solid rgba(73,40,194,.2);border-radius:14px;padding:1.4rem;transition:all .25s}
+.career-card:hover{border-color:var(--blue);background:rgba(73,40,194,.08);transform:translateY(-3px)}
+.career-area-tag{font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--magenta);margin-bottom:.5rem;opacity:.8}
+.career-name{font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;color:var(--white);margin-bottom:.4rem}
+.career-duration{font-size:.78rem;color:var(--periwinkle);opacity:.5}
+
+
+/* --------------------------------------------------------------------------
+   8. SECCIÓN "UNIVERSIDADES"
+-------------------------------------------------------------------------- */
+#universities{max-width:1100px;margin:0 auto}
+.uni-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem;margin-top:3rem}
+.uni-card{background:linear-gradient(135deg,rgba(91,42,98,.15),rgba(73,40,194,.08));border:1px solid rgba(191,64,250,.15);border-radius:20px;padding:2rem;transition:all .3s}
+.uni-card:hover{transform:translateY(-5px);border-color:rgba(191,64,250,.4);box-shadow:0 20px 60px rgba(191,64,250,.1)}
+.uni-sigla{font-family:'Syne',sans-serif;font-size:2.5rem;font-weight:800;color:var(--magenta);line-height:1;margin-bottom:.3rem;opacity:.7}
+.uni-name{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;color:var(--white);margin-bottom:.6rem}
+.uni-type{display:inline-block;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:.25rem .7rem;border-radius:100px;margin-bottom:.8rem}
+.uni-type.publica{background:rgba(73,40,194,.3);color:#a78bfa}
+.uni-type.privada{background:rgba(191,64,250,.15);color:var(--magenta)}
+.uni-desc{font-size:.84rem;line-height:1.6;color:var(--periwinkle);opacity:.65}
+
+
+/* --------------------------------------------------------------------------
+   9. SECCIÓN "¿CÓMO INGRESAR?" — LÍNEA DE TIEMPO DE PASOS
+-------------------------------------------------------------------------- */
+#howto{max-width:900px;margin:0 auto}
+.steps{display:flex;flex-direction:column;gap:0;margin-top:3rem;position:relative}
+/* Línea vertical degradada que conecta los círculos numerados */
+.steps::before{content:'';position:absolute;left:28px;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,var(--magenta),var(--blue),transparent)}
+.step{display:flex;gap:2rem;align-items:flex-start;padding-bottom:3rem;position:relative}
+.step-num{width:56px;height:56px;min-width:56px;border-radius:50%;background:var(--black);border:2px solid var(--magenta);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;color:var(--magenta);position:relative;z-index:1;box-shadow:0 0 20px rgba(191,64,250,.3)}
+.step-title{font-family:'Syne',sans-serif;font-weight:700;font-size:1.15rem;color:var(--white);margin-bottom:.4rem}
+.step-text{font-size:.9rem;line-height:1.7;color:var(--periwinkle);opacity:.7}
+
+
+/* --------------------------------------------------------------------------
+   10. SECCIÓN "TEST VOCACIONAL"
+   Toda la lógica (preguntas, respuestas, resultado) vive en js/app.js;
+   acá solo se define cómo se ve cada parte.
+-------------------------------------------------------------------------- */
+#test{max-width:760px;margin:0 auto;text-align:center}
+.test-box{background:rgba(255,255,255,.02);border:1px solid rgba(191,64,250,.2);border-radius:24px;padding:3rem 2.5rem;margin-top:3rem}
+
+/* Barra de progreso: su ancho (%) se actualiza por JS según la pregunta actual */
+.test-progress-bar{height:3px;background:rgba(255,255,255,.08);border-radius:2px;margin-bottom:2.5rem;overflow:hidden}
+.test-progress-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--magenta));border-radius:2px;transition:width .5s ease;width:0%}
+
+.test-question{font-family:'Syne',sans-serif;font-size:1.25rem;font-weight:700;color:var(--white);margin-bottom:2rem;line-height:1.4;min-height:3.5rem}
+.test-options{display:flex;flex-direction:column;gap:.75rem;margin-bottom:2rem}
+.test-option{padding:1rem 1.5rem;border:1px solid rgba(191,64,250,.2);border-radius:12px;background:transparent;color:var(--periwinkle);font-family:'DM Sans',sans-serif;font-size:.95rem;text-align:left;cursor:pointer;transition:all .2s}
+/* Estado seleccionado (clase "selected" agregada por JS al elegir una opción) */
+.test-option:hover,.test-option.selected{border-color:var(--magenta);background:rgba(191,64,250,.1);color:var(--white)}
+.test-nav{display:flex;gap:1rem;justify-content:center}
+
+/* Pantalla de resultado: oculta por defecto (display:none), JS la
+   muestra al terminar el test (ver función showResult() en app.js) */
+.test-result{display:none;animation:fadeUp .6s forwards}
+.result-emoji{font-size:3rem;margin-bottom:1rem}
+.result-title{font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;color:var(--white);margin-bottom:.5rem}
+.result-desc{font-size:.95rem;line-height:1.7;opacity:.75;margin-bottom:1.5rem}
+.result-careers{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center}
+.result-tag{padding:.4rem 1rem;background:rgba(191,64,250,.15);border:1px solid rgba(191,64,250,.3);border-radius:100px;font-size:.8rem;color:var(--magenta)}
+
+
+/* --------------------------------------------------------------------------
+   11. FOOTER
+   (Nota: la sección "Contacto" y su formulario fueron eliminados a
+   pedido. Antes acá había estilos #contact/.contact-form/.form-group
+   que ya no se usan y se quitaron de este archivo.)
+-------------------------------------------------------------------------- */
+footer{position:relative;z-index:1;padding:3rem 2rem;text-align:center;border-top:1px solid rgba(191,64,250,.1)}
+.footer-logo{font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;color:var(--white);margin-bottom:.5rem}
+.footer-logo span{color:var(--magenta)}
+.footer-sub{font-size:.8rem;opacity:.4;margin-bottom:2rem}
+.footer-links{display:flex;gap:2rem;justify-content:center;flex-wrap:wrap}
+.footer-links a{font-size:.8rem;color:var(--periwinkle);opacity:.5;text-decoration:none;transition:opacity .2s}
+.footer-links a:hover{opacity:1}
+.footer-bottom{margin-top:2rem;font-size:.75rem;opacity:.3}
+
+/* Clase genérica usada por el IntersectionObserver (en app.js) para
+   animar elementos apenas entran en pantalla al hacer scroll. */
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+
+/* --------------------------------------------------------------------------
+   12. ANIMACIONES (@keyframes)
+-------------------------------------------------------------------------- */
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes scrollPulse{0%,100%{opacity:.2;transform:scaleY(.8)}50%{opacity:1;transform:scaleY(1)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+
+
+/* --------------------------------------------------------------------------
+   13. RESPONSIVE (MEDIA QUERIES)
+   Ajustes para tablets/celulares. Mientras más angosta la pantalla,
+   más simplificamos la interfaz (se oculta el menú de escritorio,
+   aparece el hamburguesa, se reduce el padding, etc.)
+-------------------------------------------------------------------------- */
+@media(max-width:768px){
+  nav{padding:1rem 1.5rem}
+  .nav-links{display:none}
+  .hamburger{display:flex}
+  #about{grid-template-columns:1fr;gap:2rem}
+  .about-visual{height:260px}
+  .orion-ring:nth-child(3){display:none}
+  section{padding:5rem 1.5rem}
+  .steps::before{left:24px}
+  .step-num{width:48px;height:48px;min-width:48px;font-size:1rem}
+  .test-box{padding:2rem 1.5rem}
+}
+@media(max-width:480px){
+  .hero-cta{flex-direction:column;align-items:center}
+  .btn-primary,.btn-outline{width:100%;text-align:center}
+}
