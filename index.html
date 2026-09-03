@@ -5,14 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>OrionPath — Tu camino hacia el futuro</title>
 
-<!-- Tipografías de Google Fonts: 'Syne' para títulos, 'DM Sans' para texto -->
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
-
-<!-- Todos los estilos del sitio viven en este archivo externo -->
-<link rel="stylesheet" href="./styles.css"/>
+<link rel="stylesheet" href="css/styles.css"/>
 </head>
 <body>
+
 <canvas id="stars-canvas"></canvas>
+
+<!-- ==========================================================
+     BARRA DE NAVEGACIÓN ("Contacto" eliminado)
+     ========================================================== -->
 <nav id="navbar">
   <div class="nav-logo">Orion<span>Path</span></div>
   <ul class="nav-links">
@@ -26,7 +28,6 @@
   <button class="hamburger" id="hamburger" onclick="toggleMobile()"><span></span><span></span><span></span></button>
 </nav>
 
-<!-- Menú a pantalla completa que se muestra en celulares -->
 <div class="mobile-menu" id="mobileMenu">
   <button class="mobile-close" id="mobileClose" onclick="closeMobile()">✕</button>
   <a href="#hero" onclick="closeMobile()">Inicio</a>
@@ -38,7 +39,7 @@
 </div>
 
 <!-- ==========================================================
-     HERO — portada principal
+     HERO
      ========================================================== -->
 <section id="hero">
   <p class="hero-eyebrow">Escuela Nacional de Comercio N°1 · Asunción, Paraguay</p>
@@ -52,7 +53,7 @@
 </section>
 
 <!-- ==========================================================
-     SOBRE ORIONPATH — presentación del proyecto + anillos animados
+     SOBRE ORIONPATH
      ========================================================== -->
 <section>
   <div id="about">
@@ -77,6 +78,12 @@
   </div>
 </section>
 
+<!-- ==========================================================
+     ÁREAS DE ESTUDIO
+     Se agregó la nueva área "Educación y Pedagogía" y se mantienen
+     "Deporte" y "Estudiar en el Exterior". El hover ya NO cambia
+     de color/brillo (ver css/styles.css, sección 6).
+     ========================================================== -->
 <section>
   <div id="areas">
     <div class="reveal">
@@ -123,13 +130,11 @@
         <div class="area-desc">Ingeniería, biología, química, física, agronomía y ciencias ambientales. Para mentes analíticas y curiosas.</div>
       </div>
 
-      <!-- NUEVA ÁREA: Deporte -->
       <div class="area-card reveal">
         <div class="area-icon">🏅</div>
         <div class="area-name">Deporte y Ciencias del Ejercicio</div>
-        <div class="area-desc">Educación física, kinesiología, entrenamiento deportivo y gestión de instituciones deportivas. Para quienes viven el movimiento y el rendimiento físico.</div>
-        <!-- Duración estimada, pedida específicamente para esta área -->
-        <span class="area-duration">Duración aprox: 4 a 5 años</span>      
+        <div class="area-desc">Educación física, kinesiología, entrenamiento deportivo y gestión de instituciones deportivas.</div>
+        <span class="area-duration">Duración aprox: 4 a 5 años</span>
         <div class="area-unis">
           <div class="area-unis-label">Dónde estudiar</div>
           <div class="area-uni-tags">
@@ -140,24 +145,47 @@
         </div>
       </div>
 
-      <!-- NUEVA TARJETA ESPECIAL: Estudiar en el exterior -->
+      <!-- NUEVA ÁREA: Educación y Pedagogía -->
+      <div class="area-card reveal">
+        <div class="area-icon">📚</div>
+        <div class="area-name">Educación y Pedagogía</div>
+        <div class="area-desc">Formación docente, gestión educativa y acompañamiento pedagógico para las nuevas generaciones.</div>
+        <span class="area-duration">Duración aprox: 4 años</span>
+        <div class="area-unis">
+          <div class="area-unis-label">Dónde estudiar</div>
+          <div class="area-uni-tags">
+            <span class="area-uni-tag">UNA</span>
+            <span class="area-uni-tag">UCA</span>
+            <span class="area-uni-tag">UNINORTE</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tarjeta especial: Estudiar en el exterior -->
       <div class="area-card special reveal">
         <div class="area-icon">🌎</div>
         <div class="area-name">Estudiar en el Exterior</div>
-        <div class="area-desc">Algunas vocaciones, como la <strong>Biología Marina</strong>, no tienen oferta académica en Paraguay (país sin costa marítima). En esos casos, una alternativa es continuar los estudios en el exterior — por ejemplo en Argentina, Brasil o España — a través de programas de intercambio o becas como el BECAL.</div>
+        <div class="area-desc">Algunas vocaciones, como la <strong>Biología Marina</strong>, no tienen oferta académica en Paraguay (país sin costa marítima). Una alternativa es continuar los estudios en el exterior — por ejemplo en Argentina, Brasil o España — mediante becas como el BECAL.</div>
         <span class="area-duration">Duración: variable según el país y la universidad</span>
       </div>
 
     </div>
   </div>
 </section>
+
+<!-- ==========================================================
+     CARRERAS
+     Cada tarjeta ahora muestra también una descripción corta
+     (ver .career-desc en el CSS y filterCareers en app.js).
+     Se agregó el filtro "Educación".
+     ========================================================== -->
 <section>
   <div id="careers">
     <div class="reveal">
       <p class="section-label">Carreras universitarias</p>
       <h2 class="section-title">Explorá tus opciones</h2>
       <div class="divider"></div>
-      <p class="section-desc">Filtrá por área y descubrí carreras disponibles en Paraguay con su duración aproximada.</p>
+      <p class="section-desc">Filtrá por área y descubrí carreras disponibles en Paraguay, con una breve descripción y su duración aproximada.</p>
     </div>
     <div class="career-filters">
       <button class="filter-btn active" onclick="filterCareers('all',this)">Todas</button>
@@ -168,14 +196,17 @@
       <button class="filter-btn" onclick="filterCareers('arte',this)">Arte</button>
       <button class="filter-btn" onclick="filterCareers('exactas',this)">Exactas</button>
       <button class="filter-btn" onclick="filterCareers('deporte',this)">Deporte</button>
+      <button class="filter-btn" onclick="filterCareers('educ',this)">Educación</button>
     </div>
-    <!-- Este grid se llena dinámicamente desde js/app.js (filterCareers) -->
     <div class="careers-grid" id="careersGrid"></div>
   </div>
 </section>
 
 <!-- ==========================================================
      UNIVERSIDADES DE PARAGUAY
+     Se eliminó la Universidad Columbia del Paraguay. Se agregó la
+     Universidad Autónoma de Asunción (UAA). Todas las tarjetas
+     incluyen ahora un link a su sitio oficial (verificado).
      ========================================================== -->
 <section>
   <div id="universities">
@@ -186,18 +217,61 @@
       <p class="section-desc">Conocé las principales instituciones de educación superior del país, tanto públicas como privadas.</p>
     </div>
     <div class="uni-grid">
-      <div class="uni-card reveal"><div class="uni-sigla">UNA</div><div class="uni-name">Universidad Nacional de Asunción</div><span class="uni-type publica">Pública</span><div class="uni-desc">La universidad más grande y antigua del Paraguay, fundada en 1889. Ofrece más de 70 carreras en todas las áreas del conocimiento. Ingreso mediante examen de admisión.</div></div>
-      <div class="uni-card reveal"><div class="uni-sigla">UCA</div><div class="uni-name">Universidad Católica "Ntra. Sra. de la Asunción"</div><span class="uni-type privada">Privada</span><div class="uni-desc">Una de las universidades privadas más reconocidas del país. Fuerte presencia en derecho, educación y ciencias sociales. Becas disponibles.</div></div>
-      <div class="uni-card reveal"><div class="uni-sigla">UPAP</div><div class="uni-name">Universidad Politécnica y Artística del Paraguay</div><span class="uni-type privada">Privada</span><div class="uni-desc">Reconocida por sus facultades de medicina y ciencias de la salud. Cuenta con amplia oferta académica a nivel nacional.</div></div>
-      <div class="uni-card reveal"><div class="uni-sigla">UNI NORTE</div><div class="uni-name">Universidad del Norte</div><span class="uni-type privada">Privada</span><div class="uni-desc">Fuerte en administración, derecho y tecnología. Convenios internacionales y bolsa de trabajo activa para egresados.</div></div>
-      <div class="uni-card reveal"><div class="uni-sigla">UNIBE</div><div class="uni-name">Universidad Iberoamericana</div><span class="uni-type privada">Privada</span><div class="uni-desc">Especializada en ciencias de la salud y ciencias jurídicas. Infraestructura moderna y enfoque práctico.</div></div>
-      <div class="uni-card reveal"><div class="uni-sigla">UAA</div><div class="uni-name">Universidad Autónoma de Asunción</div><span class="uni-type privada">Privada</span><div class="uni-desc">Oferta académica orientada a ciencias de la salud y del deporte, entre otras áreas. Buena opción para kinesiología y ciencias del ejercicio.</div></div>
+
+      <div class="uni-card reveal">
+        <div class="uni-sigla">UNA</div>
+        <div class="uni-name">Universidad Nacional de Asunción</div>
+        <span class="uni-type publica">Pública</span>
+        <div class="uni-desc">La universidad más grande y antigua del Paraguay, fundada en 1889. Ofrece más de 70 carreras en todas las áreas del conocimiento. Ingreso mediante examen de admisión.</div>
+        <a class="uni-link" href="https://www.una.py/" target="_blank" rel="noopener noreferrer">Visitar sitio oficial ↗</a>
+      </div>
+
+      <div class="uni-card reveal">
+        <div class="uni-sigla">UCA</div>
+        <div class="uni-name">Universidad Católica "Ntra. Sra. de la Asunción"</div>
+        <span class="uni-type privada">Privada</span>
+        <div class="uni-desc">Una de las universidades privadas más reconocidas del país. Fuerte presencia en derecho, educación y ciencias sociales. Becas disponibles.</div>
+        <a class="uni-link" href="https://www.uca.edu.py/" target="_blank" rel="noopener noreferrer">Visitar sitio oficial ↗</a>
+      </div>
+
+      <div class="uni-card reveal">
+        <div class="uni-sigla">UPAP</div>
+        <div class="uni-name">Universidad Politécnica y Artística del Paraguay</div>
+        <span class="uni-type privada">Privada</span>
+        <div class="uni-desc">Reconocida por sus facultades de medicina, ciencias de la salud y artes y tecnologías. Amplia oferta académica a nivel nacional.</div>
+        <a class="uni-link" href="https://upap.edu.py/" target="_blank" rel="noopener noreferrer">Visitar sitio oficial ↗</a>
+      </div>
+
+      <div class="uni-card reveal">
+        <div class="uni-sigla">UNINORTE</div>
+        <div class="uni-name">Universidad del Norte</div>
+        <span class="uni-type privada">Privada</span>
+        <div class="uni-desc">Fuerte en administración, derecho, tecnología y ciencias de la salud. Convenios internacionales y bolsa de trabajo activa para egresados.</div>
+        <a class="uni-link" href="https://uninorte.edu.py/" target="_blank" rel="noopener noreferrer">Visitar sitio oficial ↗</a>
+      </div>
+
+      <div class="uni-card reveal">
+        <div class="uni-sigla">UNIBE</div>
+        <div class="uni-name">Universidad Iberoamericana</div>
+        <span class="uni-type privada">Privada</span>
+        <div class="uni-desc">Especializada en ciencias de la salud y ciencias jurídicas. Infraestructura moderna y enfoque práctico.</div>
+        <a class="uni-link" href="https://www.unibe.edu.py/" target="_blank" rel="noopener noreferrer">Visitar sitio oficial ↗</a>
+      </div>
+
+      <div class="uni-card reveal">
+        <div class="uni-sigla">UAA</div>
+        <div class="uni-name">Universidad Autónoma de Asunción</div>
+        <span class="uni-type privada">Privada</span>
+        <div class="uni-desc">Oferta académica en ciencias jurídicas, económicas, salud, tecnología y educación. Buena opción para kinesiología y ciencias del deporte.</div>
+        <a class="uni-link" href="https://www.uaa.edu.py/" target="_blank" rel="noopener noreferrer">Visitar sitio oficial ↗</a>
+      </div>
+
     </div>
   </div>
 </section>
 
 <!-- ==========================================================
-     ¿CÓMO INGRESAR? — línea de tiempo con pasos
+     ¿CÓMO INGRESAR?
      ========================================================== -->
 <section>
   <div id="howto">
@@ -219,10 +293,7 @@
 </section>
 
 <!-- ==========================================================
-     TEST VOCACIONAL
-     El HTML solo define los "contenedores" vacíos (testQuestion,
-     testOptions, etc.); todo el contenido se rellena dinámicamente
-     desde js/app.js usando las preguntas de js/data.js.
+     TEST VOCACIONAL — ahora con 8 preguntas (ver js/data.js)
      ========================================================== -->
 <section>
   <div id="test">
@@ -230,7 +301,7 @@
       <p class="section-label">Test Vocacional</p>
       <h2 class="section-title">¿Hacia dónde apuntan tus estrellas?</h2>
       <div class="divider" style="margin:1.2rem auto 1.8rem"></div>
-      <p class="section-desc" style="margin:0 auto">Respondé estas preguntas sobre tus intereses y habilidades para descubrir el área profesional que mejor se adapta a tu perfil.</p>
+      <p class="section-desc" style="margin:0 auto">Respondé estas 8 preguntas sobre tus intereses y habilidades para descubrir el área profesional que mejor se adapta a tu perfil.</p>
     </div>
     <div class="test-box reveal">
       <div class="test-progress-bar"><div class="test-progress-fill" id="testProgress"></div></div>
@@ -262,10 +333,7 @@
 </section>
 
 <!-- ==========================================================
-     FOOTER
-     (La sección "Contacto" fue eliminada por completo a pedido:
-     no había ningún formulario funcional, solo un link roto que
-     apuntaba a una sección inexistente.)
+     FOOTER (sección "Contacto" eliminada)
      ========================================================== -->
 <footer>
   <div class="footer-logo">Orion<span>Path</span></div>
@@ -280,11 +348,6 @@
   <p class="footer-bottom">© OrionPath — Proyecto Educativo Especialidad Informática ENC1</p>
 </footer>
 
-<!-- ==========================================================
-     SCRIPTS
-     Orden importante: primero los datos (data.js), después la
-     lógica que los usa (app.js).
-     ========================================================== -->
 <script src="./data.js"></script>
 <script src="./app.js"></script>
 </body>
