@@ -5,16 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>OrionPath — Tu camino hacia el futuro</title>
 
+<!-- Tipografías de Google Fonts: 'Syne' para títulos, 'DM Sans' para texto -->
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+
+<!-- Todos los estilos del sitio viven en este archivo externo -->
 <link rel="stylesheet" href="./styles.css"/>
 </head>
 <body>
 
+<!-- Canvas de fondo (decorativo, reservado para una futura animación de estrellas) -->
 <canvas id="stars-canvas"></canvas>
 
-<!-- ==========================================================
-     BARRA DE NAVEGACIÓN ("Contacto" eliminado)
-     ========================================================== -->
 <nav id="navbar">
   <div class="nav-logo">Orion<span>Path</span></div>
   <ul class="nav-links">
@@ -28,6 +29,7 @@
   <button class="hamburger" id="hamburger" onclick="toggleMobile()"><span></span><span></span><span></span></button>
 </nav>
 
+<!-- Menú a pantalla completa que se muestra en celulares -->
 <div class="mobile-menu" id="mobileMenu">
   <button class="mobile-close" id="mobileClose" onclick="closeMobile()">✕</button>
   <a href="#hero" onclick="closeMobile()">Inicio</a>
@@ -39,7 +41,7 @@
 </div>
 
 <!-- ==========================================================
-     HERO
+     HERO — portada principal
      ========================================================== -->
 <section id="hero">
   <p class="hero-eyebrow">Escuela Nacional de Comercio N°1 · Asunción, Paraguay</p>
@@ -53,7 +55,7 @@
 </section>
 
 <!-- ==========================================================
-     SOBRE ORIONPATH
+     SOBRE ORIONPATH — presentación del proyecto + anillos animados
      ========================================================== -->
 <section>
   <div id="about">
@@ -78,12 +80,6 @@
   </div>
 </section>
 
-<!-- ==========================================================
-     ÁREAS DE ESTUDIO
-     Se agregó la nueva área "Educación y Pedagogía" y se mantienen
-     "Deporte" y "Estudiar en el Exterior". El hover ya NO cambia
-     de color/brillo (ver css/styles.css, sección 6).
-     ========================================================== -->
 <section>
   <div id="areas">
     <div class="reveal">
@@ -130,42 +126,24 @@
         <div class="area-desc">Ingeniería, biología, química, física, agronomía y ciencias ambientales. Para mentes analíticas y curiosas.</div>
       </div>
 
+      <!-- NUEVA ÁREA: Deporte -->
       <div class="area-card reveal">
         <div class="area-icon">🏅</div>
         <div class="area-name">Deporte y Ciencias del Ejercicio</div>
-        <div class="area-desc">Educación física, kinesiología, entrenamiento deportivo y gestión de instituciones deportivas.</div>
-        <span class="area-duration">Duración aprox: 4 a 5 años</span>
-        <div class="area-unis">
-          <div class="area-unis-label">Dónde estudiar</div>
-          <div class="area-uni-tags">
-            <span class="area-uni-tag">UNA</span>
-            <span class="area-uni-tag">UNINORTE</span>
-            <span class="area-uni-tag">UAA</span>
-          </div>
-        </div>
+        <div class="area-desc">Educación física, kinesiología, entrenamiento deportivo y gestión de instituciones deportivas. Para quienes viven el movimiento y el rendimiento físico.</div>
       </div>
 
-      <!-- NUEVA ÁREA: Educación y Pedagogía -->
       <div class="area-card reveal">
         <div class="area-icon">📚</div>
         <div class="area-name">Educación y Pedagogía</div>
         <div class="area-desc">Formación docente, gestión educativa y acompañamiento pedagógico para las nuevas generaciones.</div>
-        <span class="area-duration">Duración aprox: 4 años</span>
-        <div class="area-unis">
-          <div class="area-unis-label">Dónde estudiar</div>
-          <div class="area-uni-tags">
-            <span class="area-uni-tag">UNA</span>
-            <span class="area-uni-tag">UCA</span>
-            <span class="area-uni-tag">UNINORTE</span>
-          </div>
-        </div>
       </div>
 
-      <!-- Tarjeta especial: Estudiar en el exterior -->
+      <!-- NUEVA TARJETA ESPECIAL: Estudiar en el exterior -->
       <div class="area-card special reveal">
         <div class="area-icon">🌎</div>
         <div class="area-name">Estudiar en el Exterior</div>
-        <div class="area-desc">Algunas vocaciones, como la <strong>Biología Marina</strong>, no tienen oferta académica en Paraguay (país sin costa marítima). Una alternativa es continuar los estudios en el exterior — por ejemplo en Argentina, Brasil o España — mediante becas como el BECAL.</div>
+        <div class="area-desc">Algunas vocaciones, como la <strong>Biología Marina</strong>, no tienen oferta académica en Paraguay (país sin costa marítima). En esos casos, una alternativa es continuar los estudios en el exterior — por ejemplo en Argentina, Brasil o España — a través de programas de intercambio o becas como el BECAL.</div>
         <span class="area-duration">Duración: variable según el país y la universidad</span>
       </div>
 
@@ -332,9 +310,6 @@
   </div>
 </section>
 
-<!-- ==========================================================
-     FOOTER (sección "Contacto" eliminada)
-     ========================================================== -->
 <footer>
   <div class="footer-logo">Orion<span>Path</span></div>
   <p class="footer-sub">Escuela Nacional de Comercio N°1 · Asunción, Paraguay</p>
@@ -348,7 +323,7 @@
   <p class="footer-bottom">© OrionPath — Proyecto Educativo Especialidad Informática ENC1</p>
 </footer>
 
-<script src="./data.js"></script>
-<script src="./app.js"></script>
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
 </body>
 </html>
