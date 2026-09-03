@@ -133,21 +133,6 @@ section{position:relative;z-index:1;padding:7rem 2rem}
 .area-icon{font-size:2.2rem;margin-bottom:1rem}
 .area-name{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;color:var(--white);margin-bottom:.5rem}
 .area-desc{font-size:.875rem;line-height:1.6;color:var(--periwinkle);opacity:.65}
-
-/* Chip de duración estimada (usado en la tarjeta de Deporte) */
-.area-duration{
-  display:inline-block;margin-top:.9rem;padding:.3rem .8rem;border-radius:100px;
-  font-size:.72rem;letter-spacing:.05em;background:rgba(191,64,250,.12);
-  color:var(--magenta);border:1px solid rgba(191,64,250,.25);
-}
-.area-unis{margin-top:1rem}
-.area-unis-label{font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;opacity:.5;margin-bottom:.5rem}
-.area-uni-tags{display:flex;flex-wrap:wrap;gap:.4rem}
-.area-uni-tag{
-  font-size:.72rem;padding:.3rem .7rem;border-radius:100px;
-  background:rgba(73,40,194,.18);color:#b9a8f7;border:1px solid rgba(73,40,194,.35);
-}
-
 /* Tarjeta especial "Estudiar en el exterior": borde punteado para
    distinguirla como opción complementaria, no un área vocacional más. */
 .area-card.special{
