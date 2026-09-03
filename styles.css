@@ -278,3 +278,4 @@ footer{position:relative;z-index:1;padding:3rem 2rem;text-align:center;border-to
 @media(max-width:480px){
   .hero-cta{flex-direction:column;align-items:center}
   .btn-primary,.btn-outline{width:100%;text-align:center}
+}
