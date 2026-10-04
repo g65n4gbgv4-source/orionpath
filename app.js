@@ -1,66 +1,93 @@
-/* ==========================================================================
-   ORIONPATH — LÓGICA DE LA APLICACIÓN (app.js)
-   --------------------------------------------------------------------------
-   Asume que js/data.js ya se cargó antes (index.html incluye primero
-   data.js y después app.js) y usa careersData, resultsInfo y questions.
 
-   Está dividido en 3 partes:
-   1. TEST VOCACIONAL   -> preguntas, navegación, cálculo del resultado
-   2. FILTRO DE CARRERAS -> botones "Todas / Tecnología / Salud / ..."
-      (ahora cada tarjeta de carrera también muestra su descripción corta)
-   3. MENÚ MÓVIL + ANIMACIONES AL SCROLLEAR (IntersectionObserver)
-   ========================================================================== */
+/* ==========================================================
+   ORIONPATH — TEST VOCACIONAL MULTIÁREA
+   Permite múltiples respuestas y calcula afinidades
+   porcentuales en las 8 áreas.
+   Requiere data.js cargado antes de app.js.
+   ========================================================== */
 
-
-/* --------------------------------------------------------------------------
-   1. TEST VOCACIONAL
--------------------------------------------------------------------------- */
 let currentQ = 0;
 let userAnswers = [];
 
-/**
- * Dibuja en pantalla la pregunta actual (currentQ) y sus opciones.
- */
+/* Inicializa las respuestas múltiples. */
+function initAnswers() {
+  userAnswers = questions.map((_, i) =>
+    Array.isArray(userAnswers[i]) ? userAnswers[i] : []
+  );
+}
+
+/* Dibuja la pregunta y conserva las selecciones anteriores. */
 function loadQuestion() {
   const qData = questions[currentQ];
-  document.getElementById('testQuestion').innerText = qData.q;
-
+  const question = document.getElementById('testQuestion');
   const optsContainer = document.getElementById('testOptions');
+
+  question.innerText = qData.q;
   optsContainer.innerHTML = '';
 
+  // Instrucción para el usuario.
+  const hint = document.createElement('p');
+  hint.className = 'test-hint';
+  hint.textContent =
+    'Podés seleccionar varias opciones que te representen.';
+  optsContainer.appendChild(hint);
+
   qData.opts.forEach((opt) => {
+    const selected = (userAnswers[currentQ] || [])
+      .includes(opt.area);
+
     const btn = document.createElement('button');
-    btn.className = 'test-option' + (userAnswers[currentQ] === opt.area ? ' selected' : '');
-    btn.innerText = opt.text;
-    btn.onclick = () => selectOption(opt.area, btn);
+    btn.type = 'button';
+    btn.className =
+      'test-option' + (selected ? ' selected' : '');
+    btn.setAttribute('aria-pressed', String(selected));
+    btn.innerText = (selected ? '✓  ' : '') + opt.text;
+
+    btn.onclick = () => selectOption(opt.area);
     optsContainer.appendChild(btn);
   });
 
-  const pct = (currentQ / questions.length) * 100;
-  document.getElementById('testProgress').style.width = pct + '%';
-  document.getElementById('testPrev').style.display = currentQ > 0 ? 'inline-block' : 'none';
+  const pct = ((currentQ + 1) / questions.length) * 100;
+  document.getElementById('testProgress').style.width =
+    pct + '%';
+
+  document.getElementById('testPrev').style.display =
+    currentQ > 0 ? 'inline-block' : 'none';
+
   document.getElementById('testNext').innerText =
-    currentQ === questions.length - 1 ? 'Finalizar' : 'Siguiente →';
+    currentQ === questions.length - 1
+      ? 'Ver mis resultados →'
+      : 'Siguiente →';
 }
 
-/**
- * Se ejecuta al tocar una opción de respuesta.
- */
-function selectOption(area, btnElement) {
-  userAnswers[currentQ] = area;
-  const allOpts = document.querySelectorAll('.test-option');
-  allOpts.forEach(b => b.classList.remove('selected'));
-  btnElement.classList.add('selected');
+/* Alterna una selección sin borrar las demás. */
+function selectOption(area) {
+  if (!Array.isArray(userAnswers[currentQ])) {
+    userAnswers[currentQ] = [];
+  }
+
+  const selected = userAnswers[currentQ];
+  const index = selected.indexOf(area);
+
+  if (index >= 0) {
+    selected.splice(index, 1);
+  } else {
+    selected.push(area);
+  }
+
+  loadQuestion();
 }
 
-/**
- * Botón "Siguiente →" / "Finalizar".
- */
+/* Avanza solamente si hay al menos una respuesta. */
 function nextQuestion() {
-  if (!userAnswers[currentQ]) {
-    alert('Por favor elegí una opción antes de continuar.');
+  if (
+    !Array.isArray(userAnswers[currentQ]) ||
+    userAnswers[currentQ].length === 0
+  ) {
+    alert('Elegí al menos una opción para continuar.');
     return;
   }
+
   if (currentQ < questions.length - 1) {
     currentQ++;
     loadQuestion();
@@ -69,9 +96,6 @@ function nextQuestion() {
   }
 }
 
-/**
- * Botón "← Anterior".
- */
 function prevQuestion() {
   if (currentQ > 0) {
     currentQ--;
@@ -79,53 +103,204 @@ function prevQuestion() {
   }
 }
 
-/**
- * Cuenta las respuestas por área y muestra el resultado del área ganadora.
- */
+/* Calcula porcentajes y recomienda carreras de distintas áreas. */
 function showResult() {
-  document.getElementById('testProgress').style.width = '100%';
+  const areas = Object.keys(resultsInfo);
+  const scores = Object.fromEntries(
+    areas.map(area => [area, 0])
+  );
+
+  let totalSelections = 0;
+
+  userAnswers.forEach(answer => {
+    (answer || []).forEach(area => {
+      if (Object.prototype.hasOwnProperty.call(scores, area)) {
+        scores[area]++;
+        totalSelections++;
+      }
+    });
+  });
+
+  if (totalSelections === 0) {
+    alert('Respondé al menos una pregunta.');
+    return;
+  }
+
+  const results = areas
+    .map(area => ({
+      area,
+      score: scores[area],
+      percentage: Math.round(
+        (scores[area] / totalSelections) * 100
+      )
+    }))
+    .sort((a, b) => b.score - a.score);
+
+  const top = results.filter(r => r.score > 0);
+  const main = resultsInfo[top[0].area];
+
   document.getElementById('testContent').style.display = 'none';
+  document.getElementById('testProgress').style.width = '100%';
 
-  const counts = {};
-  userAnswers.forEach(a => counts[a] = (counts[a] || 0) + 1);
-  let topArea = Object.keys(counts).reduce((a, b) => counts[a] > counts[b] ? a : b);
+  document.getElementById('resultEmoji').innerText = '✨';
+  document.getElementById('resultTitle').innerText =
+    'Tu perfil tiene varias posibilidades';
+  document.getElementById('resultDesc').innerText =
+    'Tus respuestas muestran diferentes intereses. ' +
+    'Explorá estas áreas como punto de partida, no como ' +
+    'una decisión definitiva. Podés combinar intereses ' +
+    'y descubrir carreras que nunca habías considerado.';
 
-  const res = resultsInfo[topArea];
-  document.getElementById('resultEmoji').innerText = res.emoji;
-  document.getElementById('resultTitle').innerText = res.title;
-  document.getElementById('resultDesc').innerText = res.desc;
+  /* Crear el bloque de afinidades sin modificar el HTML. */
+  let areasBox = document.getElementById('resultAreas');
 
-  document.getElementById('resultCareers').innerHTML =
-    res.careers.map(c => `<span class="result-tag">${c}</span>`).join('');
-  document.getElementById('resultUnis').innerHTML =
-    res.unis.map(u => `<span class="result-tag">${u}</span>`).join('');
+  if (!areasBox) {
+    areasBox = document.createElement('div');
+    areasBox.id = 'resultAreas';
+    areasBox.className = 'result-areas';
+
+    const careersTitle =
+      document.getElementById('resultCareers').previousElementSibling;
+
+    careersTitle.parentNode.insertBefore(areasBox, careersTitle);
+  }
+
+  areasBox.innerHTML = '<h4>Tu mapa de intereses</h4>';
+
+  results.forEach(result => {
+    if (result.score === 0) return;
+
+    const info = resultsInfo[result.area];
+    const item = document.createElement('div');
+    item.className = 'result-area-item';
+
+    const label = document.createElement('div');
+    label.className = 'result-area-label';
+
+    const name = document.createElement('span');
+    name.textContent = info.emoji + ' ' + info.title;
+
+    const pct = document.createElement('strong');
+    pct.textContent = result.percentage + '%';
+
+    label.append(name, pct);
+
+    const track = document.createElement('div');
+    track.className = 'result-bar';
+
+    const fill = document.createElement('div');
+    fill.className = 'result-bar-fill';
+    fill.style.width = result.percentage + '%';
+
+    track.appendChild(fill);
+    item.append(label, track);
+    areasBox.appendChild(item);
+  });
+
+  /*
+   * Recomendar carreras de todas las áreas con afinidad.
+   * Se incluyen primero las áreas más compatibles, pero
+   * también se muestran opciones de las demás áreas.
+   */
+  const recommendations = [];
+  const seen = new Set();
+
+  results.forEach(result => {
+    if (result.score === 0) return;
+
+    const info = resultsInfo[result.area];
+
+    // Usa las carreras registradas en el catálogo.
+    const areaCareers = careersData.filter(
+      career => career.area === result.area
+    );
+
+    areaCareers.forEach(career => {
+      if (seen.has(career.name)) return;
+      seen.add(career.name);
+
+      recommendations.push({
+        ...career,
+        percentage: result.percentage,
+        areaTitle: info.title
+      });
+    });
+  });
+
+  const careerBox = document.getElementById('resultCareers');
+  careerBox.innerHTML = '';
+
+  recommendations.forEach(career => {
+    const card = document.createElement('div');
+    card.className = 'result-career-card';
+
+    const title = document.createElement('strong');
+    title.textContent = career.name;
+
+    const area = document.createElement('span');
+    area.className = 'result-tag';
+    area.textContent = career.areaTitle;
+
+    const match = document.createElement('p');
+    match.textContent =
+      'Afinidad con el área: ' + career.percentage + '%';
+
+    const desc = document.createElement('p');
+    desc.textContent = career.desc;
+
+    const duration = document.createElement('small');
+    duration.textContent = 'Duración aproximada: ' + career.duration;
+
+    card.append(title, area, match, desc, duration);
+    careerBox.appendChild(card);
+  });
+
+  /*
+   * Las universidades se presentan como opciones generales
+   * relacionadas con las áreas identificadas.
+   */
+  const uniBox = document.getElementById('resultUnis');
+  const universities = new Set();
+
+  top.forEach(result => {
+    resultsInfo[result.area].unis.forEach(uni =>
+      universities.add(uni)
+    );
+  });
+
+  uniBox.innerHTML = '';
+
+  universities.forEach(uni => {
+    const tag = document.createElement('span');
+    tag.className = 'result-tag';
+    tag.textContent = uni;
+    uniBox.appendChild(tag);
+  });
 
   document.getElementById('testResult').style.display = 'block';
 }
 
-/**
- * Botón "Volver a hacer el test": reinicia todo al estado inicial.
- */
+/* Reinicia el test por completo. */
 function resetTest() {
   currentQ = 0;
-  userAnswers = [];
+  userAnswers = questions.map(() => []);
+
   document.getElementById('testResult').style.display = 'none';
   document.getElementById('testContent').style.display = 'block';
+
   loadQuestion();
 }
 
+/* ==========================================================
+   FILTRO DE CARRERAS
+   ========================================================== */
 
-/* --------------------------------------------------------------------------
-   2. FILTRO DE CARRERAS (sección "Explorá tus opciones")
--------------------------------------------------------------------------- */
-
-/**
- * Filtra y dibuja las tarjetas de carrera según el área elegida.
- * Cada tarjeta ahora incluye: área, nombre, descripción corta y duración.
- */
 function filterCareers(area, btn) {
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
+  document.querySelectorAll('.filter-btn').forEach(b =>
+    b.classList.remove('active')
+  );
+
+  if (btn) btn.classList.add('active');
 
   const grid = document.getElementById('careersGrid');
   grid.innerHTML = '';
@@ -137,20 +312,32 @@ function filterCareers(area, btn) {
   filtered.forEach(c => {
     const card = document.createElement('div');
     card.className = 'career-card';
-    card.innerHTML = `
-      <div class="career-area-tag">${c.area}</div>
-      <div class="career-name">${c.name}</div>
-      <div class="career-desc">${c.desc}</div>
-      <div class="career-duration">${c.duration}</div>
-    `;
+
+    const areaTag = document.createElement('div');
+    areaTag.className = 'career-area-tag';
+    areaTag.textContent =
+      resultsInfo[c.area]?.title || c.area;
+
+    const name = document.createElement('div');
+    name.className = 'career-name';
+    name.textContent = c.name;
+
+    const desc = document.createElement('div');
+    desc.className = 'career-desc';
+    desc.textContent = c.desc;
+
+    const duration = document.createElement('div');
+    duration.className = 'career-duration';
+    duration.textContent = c.duration;
+
+    card.append(areaTag, name, desc, duration);
     grid.appendChild(card);
   });
 }
 
-
-/* --------------------------------------------------------------------------
-   3. MENÚ MÓVIL + ANIMACIONES AL HACER SCROLL
--------------------------------------------------------------------------- */
+/* ==========================================================
+   MENÚ MÓVIL Y ANIMACIONES
+   ========================================================== */
 
 function toggleMobile() {
   document.getElementById('mobileMenu').classList.toggle('open');
@@ -161,16 +348,28 @@ function closeMobile() {
 }
 
 window.addEventListener('DOMContentLoaded', () => {
+  initAnswers();
   loadQuestion();
-  filterCareers('all', document.querySelector('.filter-btn'));
 
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-      }
-    });
-  }, { threshold: 0.1 });
+  const firstFilter = document.querySelector('.filter-btn');
+  if (firstFilter) filterCareers('all', firstFilter);
 
-  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.reveal').forEach(el =>
+      observer.observe(el)
+    );
+  } else {
+    document.querySelectorAll('.reveal').forEach(el =>
+      el.classList.add('visible')
+    );
+  }
 });
