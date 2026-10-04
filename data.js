@@ -1,259 +1,689 @@
-/* ==========================================================================
-   ORIONPATH — DATOS (data.js)
-   --------------------------------------------------------------------------
-   Solo información (sin lógica de interfaz). La lógica que lee estos
-   datos vive en js/app.js.
-
-   Cambios de esta versión:
-   1. Cada carrera de careersData ahora tiene un campo "desc" (descripción
-      corta) además de "duration" — antes solo Deporte tenía esa info.
-   2. Cada área tiene como mínimo 3 carreras (varias tienen 4 o 5).
-   3. Se eliminó por completo la Universidad Columbia del Paraguay de
-      todas las listas (resultsInfo). Se la reemplazó por UPAP en el
-      área de Arte (UPAP tiene facultad de Artes y Tecnologías real).
-   4. Se agregó una nueva área: "Educación y Pedagogía" (educ), con sus
-      propias carreras y su propio resultado de test.
-   5. El test pasó de 5 a 8 preguntas, y cada pregunta ahora tiene una
-      opción para cada una de las 8 áreas (antes eran 6-7).
-   ========================================================================== */
+/* ==========================================================
+   ORIONPATH — DATOS PRINCIPALES
+   Carreras, áreas, universidades y preguntas.
+   ========================================================== */
 
 
-/* --------------------------------------------------------------------------
-   1. CARRERAS (usadas en la sección "Explorá tus opciones")
-   Cada carrera tiene:
-     area      -> coincide con el filtro/resultsInfo (tech, salud, social,
-                  admin, arte, exactas, deporte, educ)
-     name      -> nombre visible de la carrera
-     duration  -> duración aproximada, como texto
-     desc      -> descripción corta (1 línea) de qué estudia esa carrera
--------------------------------------------------------------------------- */
+/* ==========================================================
+   CARRERAS
+   ========================================================== */
+
 const careersData = [
-  // ---- Tecnología e Informática (4) ----
-  { area: "tech", name: "Ingeniería en Informática", duration: "5 años", desc: "Diseño y desarrollo de software, sistemas complejos y arquitecturas tecnológicas." },
-  { area: "tech", name: "Análisis de Sistemas", duration: "4 años", desc: "Programación, bases de datos y gestión de proyectos informáticos." },
-  { area: "tech", name: "Ciberseguridad", duration: "4 años", desc: "Protección de redes, sistemas e información contra ataques digitales." },
-  { area: "tech", name: "Desarrollo de Software", duration: "4 años", desc: "Creación de aplicaciones web, móviles y de escritorio." },
 
-  // ---- Ciencias de la Salud (4) ----
-  { area: "salud", name: "Medicina", duration: "6 años", desc: "Diagnóstico, tratamiento y prevención de enfermedades en pacientes." },
-  { area: "salud", name: "Enfermería", duration: "4 años", desc: "Cuidado directo del paciente y promoción de la salud comunitaria." },
-  { area: "salud", name: "Odontología", duration: "5 años", desc: "Salud bucal, tratamientos dentales y prevención de enfermedades orales." },
-  { area: "salud", name: "Nutrición", duration: "4 años", desc: "Planificación alimentaria y hábitos saludables para prevenir enfermedades." },
+  /* --------------------------------------------------------
+     TECNOLOGÍA E INFORMÁTICA
+     -------------------------------------------------------- */
 
-  // ---- Ciencias Sociales y Jurídicas (4) ----
-  { area: "social", name: "Derecho", duration: "5 años", desc: "Estudio y aplicación de las leyes para defender derechos y resolver conflictos." },
-  { area: "social", name: "Psicología", duration: "5 años", desc: "Comprensión del comportamiento humano y acompañamiento en salud mental." },
-  { area: "social", name: "Ciencias de la Comunicación", duration: "4 años", desc: "Producción de contenidos, periodismo y comunicación institucional." },
-  { area: "social", name: "Ciencias Políticas", duration: "4 años", desc: "Análisis de sistemas de gobierno, políticas públicas y procesos electorales." },
+  {
+    name: "Ingeniería en Informática",
+    area: "tech",
+    duration: "Aproximadamente 5 años",
+    desc: "Diseño, desarrollo y gestión de sistemas informáticos, software y soluciones tecnológicas."
+  },
 
-  // ---- Administración y Negocios (4) ----
-  { area: "admin", name: "Administración de Empresas", duration: "4 años", desc: "Gestión de recursos, equipos y estrategias dentro de organizaciones." },
-  { area: "admin", name: "Contabilidad Pública", duration: "4 años", desc: "Registro, control y análisis financiero de empresas e instituciones." },
-  { area: "admin", name: "Marketing y Publicidad", duration: "4 años", desc: "Estrategias de marca, campañas publicitarias y comportamiento del consumidor." },
-  { area: "admin", name: "Comercio Internacional", duration: "4 años", desc: "Importación, exportación y negociación entre países." },
+  {
+    name: "Análisis de Sistemas",
+    area: "tech",
+    duration: "Aproximadamente 4 años",
+    desc: "Análisis, diseño y desarrollo de sistemas de información para organizaciones."
+  },
 
-  // ---- Arte y Diseño (4) ----
-  { area: "arte", name: "Diseño Gráfico", duration: "4 años", desc: "Comunicación visual mediante imagen, tipografía y branding." },
-  { area: "arte", name: "Arquitectura", duration: "5 años", desc: "Diseño, planificación y construcción de espacios funcionales." },
-  { area: "arte", name: "Diseño Industrial", duration: "4 años", desc: "Creación de productos y objetos que combinan función y forma." },
-  { area: "arte", name: "Artes Audiovisuales", duration: "4 años", desc: "Producción de cine, video y contenido audiovisual." },
+  {
+    name: "Ciberseguridad",
+    area: "tech",
+    duration: "Aproximadamente 4 años",
+    desc: "Protección de sistemas, redes, información y servicios digitales frente a amenazas."
+  },
 
-  // ---- Ciencias Exactas y Naturales (5) ----
-  { area: "exactas", name: "Ingeniería Civil", duration: "5 años", desc: "Diseño y construcción de infraestructuras como edificios y puentes." },
-  { area: "exactas", name: "Biotecnología", duration: "5 años", desc: "Aplicación de procesos biológicos para desarrollos científicos e industriales." },
-  { area: "exactas", name: "Química Industrial", duration: "4 años", desc: "Procesos químicos aplicados a la industria y control de calidad." },
-  { area: "exactas", name: "Licenciatura en Biología", duration: "4 años", desc: "Estudio de los seres vivos, ecosistemas y procesos naturales." },
-  // Carrera sin oferta académica en Paraguay: se deja igual en el filtro
-  // "exactas" (es su área real) pero con nota clara sobre estudiar afuera.
-  { area: "exactas", name: "Biología Marina (no se dicta en Paraguay)", duration: "4-5 años (en el exterior)", desc: "Estudio de la vida marina y ecosistemas oceánicos; se cursa en el exterior." },
+  {
+    name: "Desarrollo de Software",
+    area: "tech",
+    duration: "Aproximadamente 4 años",
+    desc: "Creación, programación, prueba y mantenimiento de aplicaciones y soluciones digitales."
+  },
 
-  // ---- Deporte y Ciencias del Ejercicio (3) ----
-  { area: "deporte", name: "Ciencias del Deporte / Educación Física", duration: "4 años", desc: "Formación en entrenamiento, actividad física y enseñanza deportiva." },
-  { area: "deporte", name: "Kinesiología y Fisioterapia", duration: "5 años", desc: "Rehabilitación física y recuperación motora de pacientes." },
-  { area: "deporte", name: "Gestión y Marketing Deportivo", duration: "4 años", desc: "Administración de clubes, eventos y marcas deportivas." },
 
-  // ---- NUEVA ÁREA: Educación y Pedagogía (3) ----
-  { area: "educ", name: "Profesorado en Educación Escolar Básica", duration: "4 años", desc: "Formación docente para acompañar el aprendizaje en los primeros años." },
-  { area: "educ", name: "Ciencias de la Educación", duration: "4 años", desc: "Diseño curricular, gestión educativa e investigación pedagógica." },
-  { area: "educ", name: "Educación Especial / Inclusiva", duration: "4 años", desc: "Acompañamiento pedagógico a estudiantes con necesidades específicas." }
+  /* --------------------------------------------------------
+     CIENCIAS DE LA SALUD
+     -------------------------------------------------------- */
+
+  {
+    name: "Medicina",
+    area: "salud",
+    duration: "Aproximadamente 6 años",
+    desc: "Prevención, diagnóstico y tratamiento de enfermedades y cuidado integral de la salud."
+  },
+
+  {
+    name: "Enfermería",
+    area: "salud",
+    duration: "Aproximadamente 4 años",
+    desc: "Cuidado integral de las personas y participación en la promoción, prevención y recuperación de la salud."
+  },
+
+  {
+    name: "Odontología",
+    area: "salud",
+    duration: "Aproximadamente 5 años",
+    desc: "Prevención, diagnóstico y tratamiento de enfermedades y alteraciones de la salud bucal."
+  },
+
+  {
+    name: "Nutrición",
+    area: "salud",
+    duration: "Aproximadamente 4 años",
+    desc: "Estudio de la alimentación y su relación con la salud, el bienestar y la prevención de enfermedades."
+  },
+
+
+  /* --------------------------------------------------------
+     CIENCIAS SOCIALES Y JURÍDICAS
+     -------------------------------------------------------- */
+
+  {
+    name: "Derecho",
+    area: "social",
+    duration: "Aproximadamente 5 años",
+    desc: "Estudio de las normas jurídicas, derechos, obligaciones y sistemas legales."
+  },
+
+  {
+    name: "Psicología",
+    area: "social",
+    duration: "Aproximadamente 5 años",
+    desc: "Estudio del comportamiento humano, los procesos mentales y las relaciones interpersonales."
+  },
+
+  {
+    name: "Ciencias de la Comunicación",
+    area: "social",
+    duration: "Aproximadamente 4 años",
+    desc: "Estudio y producción de contenidos y procesos de comunicación en diferentes medios y contextos."
+  },
+
+  {
+    name: "Ciencias Políticas",
+    area: "social",
+    duration: "Aproximadamente 4 años",
+    desc: "Análisis de los sistemas políticos, instituciones, gobiernos y procesos sociales."
+  },
+
+
+  /* --------------------------------------------------------
+     ADMINISTRACIÓN Y NEGOCIOS
+     -------------------------------------------------------- */
+
+  {
+    name: "Administración de Empresas",
+    area: "admin",
+    duration: "Aproximadamente 4 años",
+    desc: "Gestión de organizaciones, recursos, proyectos y procesos empresariales."
+  },
+
+  {
+    name: "Contabilidad Pública",
+    area: "admin",
+    duration: "Aproximadamente 4 años",
+    desc: "Gestión y análisis de información contable, financiera y tributaria."
+  },
+
+  {
+    name: "Marketing y Publicidad",
+    area: "admin",
+    duration: "Aproximadamente 4 años",
+    desc: "Desarrollo de estrategias de comunicación, promoción, marcas y comportamiento del consumidor."
+  },
+
+  {
+    name: "Comercio Internacional",
+    area: "admin",
+    duration: "Aproximadamente 4 años",
+    desc: "Estudio de operaciones comerciales, negocios y relaciones económicas entre países."
+  },
+
+
+  /* --------------------------------------------------------
+     ARTE Y DISEÑO
+     -------------------------------------------------------- */
+
+  {
+    name: "Diseño Gráfico",
+    area: "arte",
+    duration: "Aproximadamente 4 años",
+    desc: "Creación de soluciones visuales para comunicar ideas mediante composición, imagen, tipografía y medios digitales."
+  },
+
+  {
+    name: "Arquitectura",
+    area: "arte",
+    duration: "Aproximadamente 5 años",
+    desc: "Diseño y planificación de espacios, edificios y entornos considerando aspectos funcionales y estéticos."
+  },
+
+  {
+    name: "Diseño Industrial",
+    area: "arte",
+    duration: "Aproximadamente 4 años",
+    desc: "Diseño y desarrollo de productos considerando funcionalidad, estética, materiales y necesidades de los usuarios."
+  },
+
+  {
+    name: "Artes Audiovisuales",
+    area: "arte",
+    duration: "Aproximadamente 4 años",
+    desc: "Producción y creación de contenidos audiovisuales mediante imagen, sonido, narrativa y tecnología."
+  },
+
+
+  /* --------------------------------------------------------
+     CIENCIAS EXACTAS Y NATURALES
+     -------------------------------------------------------- */
+
+  {
+    name: "Ingeniería Civil",
+    area: "exactas",
+    duration: "Aproximadamente 5 años",
+    desc: "Diseño, planificación y construcción de infraestructura y obras civiles."
+  },
+
+  {
+    name: "Biotecnología",
+    area: "exactas",
+    duration: "Aproximadamente 5 años",
+    desc: "Aplicación de conocimientos biológicos y tecnológicos para desarrollar productos y procesos."
+  },
+
+  {
+    name: "Química Industrial",
+    area: "exactas",
+    duration: "Aproximadamente 4 años",
+    desc: "Aplicación de la química a procesos industriales, producción, control y desarrollo de materiales."
+  },
+
+  {
+    name: "Licenciatura en Biología",
+    area: "exactas",
+    duration: "Aproximadamente 4 años",
+    desc: "Estudio de los seres vivos, sus procesos, diversidad, evolución y relación con el ambiente."
+  },
+
+  {
+    name: "Biología Marina",
+    area: "exactas",
+    duration: "Variable según la institución y el país",
+    location: "exterior",
+    desc: "Estudio de organismos marinos y ecosistemas acuáticos. Requiere explorar opciones de formación en el exterior."
+  },
+
+
+  /* --------------------------------------------------------
+     DEPORTE Y CIENCIAS DEL EJERCICIO
+     -------------------------------------------------------- */
+
+  {
+    name: "Educación Física",
+    area: "deporte",
+    duration: "Aproximadamente 4 años",
+    desc: "Educación, enseñanza y promoción de la actividad física, el movimiento y los hábitos saludables."
+  },
+
+  {
+    name: "Ciencias del Deporte",
+    area: "deporte",
+    duration: "Variable según la institución",
+    desc: "Estudio científico del deporte, el rendimiento físico, el entrenamiento y la actividad deportiva."
+  },
+
+  {
+    name: "Kinesiología y Fisioterapia",
+    area: "deporte",
+    duration: "Aproximadamente 5 años",
+    desc: "Prevención, evaluación y recuperación del movimiento y las funciones físicas."
+  },
+
+  {
+    name: "Gestión y Marketing Deportivo",
+    area: "deporte",
+    duration: "Variable según la institución",
+    desc: "Gestión de organizaciones, eventos, proyectos, comunicación y marketing relacionados con el deporte."
+  },
+
+
+  /* --------------------------------------------------------
+     EDUCACIÓN Y PEDAGOGÍA
+     -------------------------------------------------------- */
+
+  {
+    name: "Profesorado en Educación Escolar Básica",
+    area: "educ",
+    duration: "Aproximadamente 4 años",
+    desc: "Formación para la enseñanza y acompañamiento educativo en los primeros niveles de escolaridad."
+  },
+
+  {
+    name: "Ciencias de la Educación",
+    area: "educ",
+    duration: "Aproximadamente 4 años",
+    desc: "Estudio de los procesos educativos, pedagógicos y sociales relacionados con la enseñanza y el aprendizaje."
+  },
+
+  {
+    name: "Educación Especial / Inclusiva",
+    area: "educ",
+    duration: "Variable según la institución",
+    desc: "Formación orientada a la atención educativa de personas con diferentes necesidades y al desarrollo de prácticas inclusivas."
+  },
+
+  {
+    name: "Educación Inicial",
+    area: "educ",
+    duration: "Variable según la institución",
+    desc: "Formación orientada al desarrollo, aprendizaje y educación de niños y niñas durante la primera infancia."
+  }
+
 ];
 
 
-/* --------------------------------------------------------------------------
-   2. RESULTADOS DEL TEST (una entrada por cada área posible)
-   NOTA: se eliminó "COLUMBIA" de todas las listas de universidades.
-   En el área de Arte, Columbia se reemplazó por UPAP, que cuenta con
-   una Facultad de Artes y Tecnologías real.
--------------------------------------------------------------------------- */
+/* ==========================================================
+   INFORMACIÓN DE LAS ÁREAS
+   Las carreras se obtienen directamente desde careersData.
+   ========================================================== */
+
 const resultsInfo = {
+
   tech: {
-    emoji: "💻",
     title: "Tecnología e Informática",
-    desc: "Tenés una mente lógica, orientada a la resolución de problemas y la innovación digital.",
-    careers: ["Ingeniería en Informática", "Análisis de Sistemas", "Ciberseguridad", "Desarrollo de Software"],
-    unis: ["UNA (Politécnica)", "UCA", "UNINORTE"]
+    emoji: "💻",
+    unis: [
+      "UNA (Politécnica)",
+      "UCA",
+      "UNINORTE"
+    ]
   },
+
   salud: {
-    emoji: "⚕️",
     title: "Ciencias de la Salud",
-    desc: "Tu vocación está claramente guiada por la empatía, el cuidado y el bienestar de los demás.",
-    careers: ["Medicina", "Enfermería", "Odontología", "Nutrición"],
-    unis: ["UNA (Medicina)", "UCA", "UNIBE", "UPAP"]
+    emoji: "🩺",
+    unis: [
+      "UNA (Medicina)",
+      "UCA",
+      "UNIBE",
+      "UPAP"
+    ]
   },
+
   social: {
-    emoji: "⚖️",
     title: "Ciencias Sociales y Jurídicas",
-    desc: "Te apasiona la justicia, la comunicación y el análisis del comportamiento humano.",
-    careers: ["Derecho", "Psicología", "Ciencias Políticas", "Comunicación"],
-    unis: ["UNA (Derecho)", "UCA", "UNIBE", "UNINORTE"]
+    emoji: "⚖️",
+    unis: [
+      "UNA (Derecho)",
+      "UCA",
+      "UNIBE",
+      "UNINORTE"
+    ]
   },
+
   admin: {
-    emoji: "📊",
     title: "Administración y Negocios",
-    desc: "Tenés visión estratégica, capacidad organizativa y espíritu emprendedor.",
-    careers: ["Administración de Empresas", "Contabilidad", "Marketing", "Comercio Internacional"],
-    unis: ["UNA (Económicas)", "UCA", "UNINORTE"]
+    emoji: "📊",
+    unis: [
+      "UNA (Económicas)",
+      "UCA",
+      "UNINORTE"
+    ]
   },
+
   arte: {
-    emoji: "🎨",
     title: "Arte y Diseño",
-    desc: "Destacás por tu creatividad, pensamiento visual y capacidad estética.",
-    careers: ["Diseño Gráfico", "Arquitectura", "Diseño Industrial", "Artes Audiovisuales"],
-    unis: ["UNA (FADA)", "UCA", "UPAP"]
+    emoji: "🎨",
+    unis: [
+      "UNA (FADA)",
+      "UCA",
+      "UPAP"
+    ]
   },
+
   exactas: {
-    emoji: "🔬",
     title: "Ciencias Exactas y Naturales",
-    desc: "Te caracteriza la curiosidad científica, el rigor analítico y la pasión por el descubrimiento.",
-    careers: ["Ingeniería Civil", "Química Industrial", "Biología", "Biotecnología"],
-    unis: ["UNA (FACEN/FIUNA)", "UCA"]
+    emoji: "🔬",
+    unis: [
+      "UNA (FACEN / FIUNA)",
+      "UCA"
+    ]
   },
+
   deporte: {
-    emoji: "🏅",
     title: "Deporte y Ciencias del Ejercicio",
-    desc: "Tenés energía, disciplina y pasión por el movimiento, la actividad física y el rendimiento.",
-    careers: ["Ciencias del Deporte", "Educación Física", "Kinesiología y Fisioterapia", "Gestión Deportiva"],
-    unis: ["UNA (FACM)", "UNINORTE", "UAA"]
+    emoji: "🏃",
+    unis: [
+      "UNA",
+      "UNINORTE",
+      "UAA"
+    ]
   },
-  // NUEVO resultado posible del test
+
   educ: {
-    emoji: "📚",
     title: "Educación y Pedagogía",
-    desc: "Tenés vocación por enseñar, acompañar y transformar la vida de otros a través del conocimiento.",
-    careers: ["Educación Escolar Básica", "Ciencias de la Educación", "Educación Especial", "Educación Inicial"],
-    unis: ["UNA (FILO)", "UCA", "UNINORTE"]
+    emoji: "📚",
+    unis: [
+      "UNA",
+      "UCA",
+      "UNINORTE"
+    ]
   }
+
 };
 
 
-/* --------------------------------------------------------------------------
-   3. PREGUNTAS DEL TEST VOCACIONAL
-   Ahora son 8 preguntas (antes 5), cada una con 8 opciones — una por
-   cada área definida arriba en resultsInfo.
--------------------------------------------------------------------------- */
+/* ==========================================================
+   PREGUNTAS DEL TEST
+   Cada pregunta permite seleccionar varias opciones.
+   ========================================================== */
+
 const questions = [
+
   {
-    q: "1. ¿Qué actividad disfrutás realizar en tu tiempo libre?",
+    q: "¿Qué actividad te gustaría hacer durante tu tiempo libre?",
     opts: [
-      { text: "Resolver acertijos, programar o explorar herramientas tecnológicas", area: "tech" },
-      { text: "Aprender sobre el cuerpo humano, salud o primeros auxilios", area: "salud" },
-      { text: "Debatir sobre temas sociales, historia o analizar comportamientos", area: "social" },
-      { text: "Organizar eventos, gestionar proyectos o idear emprendimientos", area: "admin" },
-      { text: "Dibujar, editar fotos/videos o crear proyectos artísticos", area: "arte" },
-      { text: "Hacer experimentos, calcular problemas complejos o investigar la naturaleza", area: "exactas" },
-      { text: "Entrenar, practicar algún deporte o mantenerte físicamente activo", area: "deporte" },
-      { text: "Enseñar algo nuevo a otra persona o explicar temas que dominás", area: "educ" }
+      {
+        text: "Crear programas, editar o experimentar con tecnología",
+        area: "tech"
+      },
+      {
+        text: "Investigar sobre el cuerpo humano, salud o bienestar",
+        area: "salud"
+      },
+      {
+        text: "Debatir, escribir, investigar o conocer temas sociales",
+        area: "social"
+      },
+      {
+        text: "Organizar proyectos, negocios o emprendimientos",
+        area: "admin"
+      },
+      {
+        text: "Dibujar, diseñar, bailar, crear contenido o hacer arte",
+        area: "arte"
+      },
+      {
+        text: "Experimentar, investigar la naturaleza o resolver problemas",
+        area: "exactas"
+      },
+      {
+        text: "Practicar deportes, entrenar o aprender sobre movimiento",
+        area: "deporte"
+      },
+      {
+        text: "Ayudar a otras personas a aprender algo nuevo",
+        area: "educ"
+      }
     ]
   },
+
   {
-    q: "2. Frente a un problema en un grupo de trabajo, ¿cuál es tu reacción habitual?",
+    q: "Cuando aparece un problema en un trabajo grupal, ¿qué solés hacer?",
     opts: [
-      { text: "Busco una solución lógica, automatizada o técnica", area: "tech" },
-      { text: "Me preocupo por el bienestar de las personas afectadas", area: "salud" },
-      { text: "Medio la comunicación para resolver el conflicto pacíficamente", area: "social" },
-      { text: "Tomo el liderazgo para planificar y distribuir tareas eficientemente", area: "admin" },
-      { text: "Aporto una perspectiva creativa e innovadora", area: "arte" },
-      { text: "Analizo detalladamente las causas y los datos objetivos del problema", area: "exactas" },
-      { text: "Motivo al equipo con energía y espíritu de superación", area: "deporte" },
-      { text: "Explico con paciencia hasta que todos entienden la situación", area: "educ" }
+      {
+        text: "Buscar una solución usando herramientas tecnológicas",
+        area: "tech"
+      },
+      {
+        text: "Pensar en cómo afecta a las personas involucradas",
+        area: "salud"
+      },
+      {
+        text: "Hablar con todos y tratar de entender las diferentes opiniones",
+        area: "social"
+      },
+      {
+        text: "Organizar al grupo y repartir las tareas",
+        area: "admin"
+      },
+      {
+        text: "Proponer una idea creativa y diferente",
+        area: "arte"
+      },
+      {
+        text: "Analizar el problema paso a paso",
+        area: "exactas"
+      },
+      {
+        text: "Buscar una solución práctica y activa",
+        area: "deporte"
+      },
+      {
+        text: "Ayudar a que todos entiendan qué deben hacer",
+        area: "educ"
+      }
     ]
   },
+
   {
-    q: "3. ¿Qué asignaturas de la secundaria captaban más tu atención?",
+    q: "¿Qué tipo de materias o actividades escolares te llaman más la atención?",
     opts: [
-      { text: "Informática, Robótica o Lógica", area: "tech" },
-      { text: "Biología, Salud o Química", area: "salud" },
-      { text: "Historia, Psicología, Ética o Formación Ciudadana", area: "social" },
-      { text: "Contabilidad, Economía o Administración", area: "admin" },
-      { text: "Artes Plásticas, Literatura o Diseño", area: "arte" },
-      { text: "Matemática Avanzada o Física", area: "exactas" },
-      { text: "Educación Física, Deportes o actividades recreativas", area: "deporte" },
-      { text: "Pedagogía, o ayudar a compañeros a estudiar y entender temas", area: "educ" }
+      {
+        text: "Informática, programación y tecnología",
+        area: "tech"
+      },
+      {
+        text: "Biología, salud y anatomía",
+        area: "salud"
+      },
+      {
+        text: "Historia, comunicación, literatura o sociedad",
+        area: "social"
+      },
+      {
+        text: "Economía, administración o emprendimiento",
+        area: "admin"
+      },
+      {
+        text: "Arte, diseño, música o expresión corporal",
+        area: "arte"
+      },
+      {
+        text: "Matemática, química, física o ciencias naturales",
+        area: "exactas"
+      },
+      {
+        text: "Educación física, deporte y entrenamiento",
+        area: "deporte"
+      },
+      {
+        text: "Pedagogía, enseñanza o actividades educativas",
+        area: "educ"
+      }
     ]
   },
+
   {
-    q: "4. ¿En qué tipo de entorno te imaginas trabajando profesionalmente?",
+    q: "¿En qué ambiente de trabajo te imaginarías más cómoda/o?",
     opts: [
-      { text: "Un laboratorio tecnológico, empresa de software o remoto", area: "tech" },
-      { text: "Un hospital, clínica, laboratorio o centro de atención a la salud", area: "salud" },
-      { text: "Instituciones públicas, ONGs, juzgados o consultorios sociales", area: "social" },
-      { text: "Oficinas corporativas, empresas propias o entornos financieros", area: "admin" },
-      { text: "Estudios creativos, talleres de diseño, agencias o medios de comunicación", area: "arte" },
-      { text: "Centros de investigación, industrias tecnológicas o de campo", area: "exactas" },
-      { text: "Un gimnasio, club deportivo, centro de alto rendimiento o al aire libre", area: "deporte" },
-      { text: "Una escuela, colegio o instituto de formación", area: "educ" }
+      {
+        text: "Frente a una computadora o trabajando con tecnología",
+        area: "tech"
+      },
+      {
+        text: "En un hospital, clínica, laboratorio o centro de salud",
+        area: "salud"
+      },
+      {
+        text: "En una institución, organización, medio de comunicación o estudio jurídico",
+        area: "social"
+      },
+      {
+        text: "En una empresa, oficina o emprendimiento",
+        area: "admin"
+      },
+      {
+        text: "En un estudio creativo, escenario, taller o espacio artístico",
+        area: "arte"
+      },
+      {
+        text: "En un laboratorio, centro de investigación o proyecto científico",
+        area: "exactas"
+      },
+      {
+        text: "En un gimnasio, club, cancha o espacio deportivo",
+        area: "deporte"
+      },
+      {
+        text: "En una escuela, institución educativa o espacio de aprendizaje",
+        area: "educ"
+      }
     ]
   },
+
   {
-    q: "5. ¿Qué logro te generaría mayor satisfacción profesional?",
+    q: "¿Qué logro profesional te haría sentir más orgullosa/o?",
     opts: [
-      { text: "Desarrollar una aplicación o sistema informático de gran utilidad", area: "tech" },
-      { text: "Contribuir a salvar vidas o mejorar la calidad de vida de un paciente", area: "salud" },
-      { text: "Promover el cumplimiento de leyes o la resolución de problemas comunitarios", area: "social" },
-      { text: "Construir una empresa próspera y rentable", area: "admin" },
-      { text: "Diseñar una obra visual o producto reconocido", area: "arte" },
-      { text: "Realizar un descubrimiento científico o avance tecnológico", area: "exactas" },
-      { text: "Ayudar a un equipo o a una persona a alcanzar su máximo rendimiento físico", area: "deporte" },
-      { text: "Formar a futuras generaciones y marcar una diferencia en su aprendizaje", area: "educ" }
+      {
+        text: "Crear una aplicación, sistema o solución tecnológica",
+        area: "tech"
+      },
+      {
+        text: "Ayudar a mejorar la salud o calidad de vida de alguien",
+        area: "salud"
+      },
+      {
+        text: "Defender una causa, comunicar una idea o generar un cambio social",
+        area: "social"
+      },
+      {
+        text: "Crear y hacer crecer una empresa o proyecto",
+        area: "admin"
+      },
+      {
+        text: "Crear una obra, diseño, espectáculo o proyecto artístico",
+        area: "arte"
+      },
+      {
+        text: "Descubrir, investigar o desarrollar algo nuevo",
+        area: "exactas"
+      },
+      {
+        text: "Mejorar el rendimiento o bienestar físico de otras personas",
+        area: "deporte"
+      },
+      {
+        text: "Enseñar y ver progresar a otras personas",
+        area: "educ"
+      }
     ]
   },
+
   {
-    q: "6. ¿Qué tipo de proyecto escolar te gustaba más armar?",
+    q: "Si tuvieras que realizar un proyecto para la escuela, ¿cuál elegirías?",
     opts: [
-      { text: "Una maqueta, robot o proyecto de programación", area: "tech" },
-      { text: "Una campaña de salud o de primeros auxilios", area: "salud" },
-      { text: "Un debate, investigación social o mesa redonda", area: "social" },
-      { text: "Un plan de negocio o una feria de emprendedores", area: "admin" },
-      { text: "Un mural, afiche o producción artística", area: "arte" },
-      { text: "Un experimento científico o de laboratorio", area: "exactas" },
-      { text: "Una jornada deportiva o torneo entre cursos", area: "deporte" },
-      { text: "Una clase o taller para enseñarle algo a compañeros más chicos", area: "educ" }
+      {
+        text: "Crear una página web o aplicación",
+        area: "tech"
+      },
+      {
+        text: "Investigar una enfermedad, alimento o tema relacionado con la salud",
+        area: "salud"
+      },
+      {
+        text: "Realizar una investigación sobre un problema social",
+        area: "social"
+      },
+      {
+        text: "Crear un emprendimiento o plan de negocios",
+        area: "admin"
+      },
+      {
+        text: "Crear una campaña visual, obra o presentación artística",
+        area: "arte"
+      },
+      {
+        text: "Realizar un experimento o investigación científica",
+        area: "exactas"
+      },
+      {
+        text: "Organizar una actividad deportiva o desafío físico",
+        area: "deporte"
+      },
+      {
+        text: "Crear una actividad para enseñar algo a otros estudiantes",
+        area: "educ"
+      }
     ]
   },
+
   {
-    q: "7. Si tuvieras que elegir un canal o cuenta para seguir, ¿cuál sería?",
+    q: "¿Qué tipo de contenido te gustaría crear o consumir más?",
     opts: [
-      { text: "Uno de tecnología, videojuegos o programación", area: "tech" },
-      { text: "Uno de salud, bienestar o medicina", area: "salud" },
-      { text: "Uno de actualidad, política o sociedad", area: "social" },
-      { text: "Uno de negocios, finanzas o emprendimiento", area: "admin" },
-      { text: "Uno de arte, diseño o moda", area: "arte" },
-      { text: "Uno de ciencia, naturaleza o descubrimientos", area: "exactas" },
-      { text: "Uno de deportes y vida activa", area: "deporte" },
-      { text: "Uno de educación, docencia o divulgación", area: "educ" }
+      {
+        text: "Tecnología, programación y videojuegos",
+        area: "tech"
+      },
+      {
+        text: "Salud, nutrición y bienestar",
+        area: "salud"
+      },
+      {
+        text: "Noticias, debates, cultura y sociedad",
+        area: "social"
+      },
+      {
+        text: "Negocios, marcas, emprendimiento y marketing",
+        area: "admin"
+      },
+      {
+        text: "Arte, diseño, música, danza y audiovisual",
+        area: "arte"
+      },
+      {
+        text: "Ciencia, naturaleza y descubrimientos",
+        area: "exactas"
+      },
+      {
+        text: "Deportes, entrenamiento y rendimiento",
+        area: "deporte"
+      },
+      {
+        text: "Educación, aprendizaje y desarrollo personal",
+        area: "educ"
+      }
     ]
   },
+
   {
-    q: "8. ¿Qué te describe mejor?",
+    q: "¿Cuál de estas descripciones se parece más a vos?",
     opts: [
-      { text: "Curioso/a por entender cómo funcionan las cosas por dentro", area: "tech" },
-      { text: "Sensible ante el dolor o las necesidades de otros", area: "salud" },
-      { text: "Con facilidad para escuchar y mediar en conflictos", area: "social" },
-      { text: "Organizado/a y con visión para planificar", area: "admin" },
-      { text: "Con una mirada creativa para todo lo que hago", area: "arte" },
-      { text: "Analítico/a y metódico/a a la hora de resolver problemas", area: "exactas" },
-      { text: "Con energía y disciplina para superar desafíos físicos", area: "deporte" },
-      { text: "Paciente y con gusto por explicar o guiar a otros", area: "educ" }
+      {
+        text: "Curiosa/o, lógica/o y amante de la tecnología",
+        area: "tech"
+      },
+      {
+        text: "Empática/o, cuidadosa/o y preocupada/o por el bienestar",
+        area: "salud"
+      },
+      {
+        text: "Comunicativa/o, crítica/o y observadora/or",
+        area: "social"
+      },
+      {
+        text: "Organizada/o, estratégica/o y con iniciativa",
+        area: "admin"
+      },
+      {
+        text: "Creativa/o, expresiva/o e imaginativa/o",
+        area: "arte"
+      },
+      {
+        text: "Analítica/o, curiosa/o y orientada/o a la investigación",
+        area: "exactas"
+      },
+      {
+        text: "Activa/o, disciplinada/o y competitiva/o",
+        area: "deporte"
+      },
+      {
+        text: "Paciente, comunicativa/o y con facilidad para explicar",
+        area: "educ"
+      }
     ]
   }
+
 ];
