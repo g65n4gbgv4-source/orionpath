@@ -388,3 +388,27 @@ footer{position:relative;z-index:1;padding:3rem 2rem;text-align:center;border-to
     font-size: .78rem;
   }
 }
+.result-career-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: .6rem;
+  text-align: left;
+  padding: 1rem;
+  border: 1px solid rgba(191, 64, 250, .2);
+  background: rgba(255, 255, 255, .025);
+  border-radius: 14px;
+  min-width: 0;
+  transition: transform .2s ease, border-color .2s ease;
+}
+
+.result-career-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--magenta);
+}
+
+.result-tag {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+}
