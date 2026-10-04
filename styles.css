@@ -1,1255 +1,281 @@
-
-/* ==========================================================
-   ORIONPATH — STYLES.CSS
-   1. Variables y reset
-   2. Navegación y menú móvil
-   3. Portada
-   4. Estilos generales
-   5. Sobre OrionPath
-   6. Áreas de estudio
-   7. Carreras y filtros
-   8. Universidades
-   9. Cómo ingresar
-   10. Test vocacional y resultados
+/* ==========================================================================
+   ORIONPATH — HOJA DE ESTILOS (styles.css)
+   --------------------------------------------------------------------------
+   Este archivo se divide en las siguientes partes, en este orden:
+   1. Variables de color y reset general
+   2. Barra de navegación (nav) + menú móvil
+   3. Sección Hero (portada)
+   4. Estilos generales de "sección" (título, descripción, divisor)
+   5. Sección "Sobre OrionPath" (about) — el anillo animado tipo Orión
+   6. Sección "Áreas de estudio" (areas)
+   7. Sección "Carreras" (careers) + filtros — ahora con descripción corta
+   8. Sección "Universidades" (universities) — con link al sitio oficial
+   9. Sección "¿Cómo ingresar?" (howto) — línea de tiempo con pasos
+   10. Sección "Test vocacional" (test)
    11. Footer
-   12. Animaciones
-   13. Diseño responsive
-   ========================================================== */
-
-/* 1. VARIABLES Y RESET */
-:root {
-  --periwinkle: #E3D9FC;
-  --magenta: #9d4cc2;
-  --blue: #4928C2;
-  --velvet: #5B2A62;
-  --black: #040607;
-  --white: #f8f4ff;
-}
-
-*, *::before, *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-html {
-  scroll-behavior: smooth;
-  scroll-padding-top: 85px;
-}
-
-body {
-  background: var(--black);
-  color: var(--periwinkle);
-  font-family: 'DM Sans', sans-serif;
-  overflow-x: hidden;
-}
-
-button, input, select, textarea {
-  font: inherit;
-}
-
-button {
-  cursor: pointer;
-}
-
-button:focus-visible,
-a:focus-visible {
-  outline: 2px solid var(--magenta);
-  outline-offset: 4px;
-}
-
-#stars-canvas {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* 2. NAVEGACIÓN Y MENÚ MÓVIL */
-nav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1.2rem 3rem;
-  background: rgba(4, 6, 7, .7);
-  backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(191, 64, 250, .15);
-  transition: all .3s;
-}
-
-.nav-logo {
-  font-family: 'Syne', sans-serif;
-  font-weight: 800;
-  font-size: 1.5rem;
-  color: var(--white);
-  letter-spacing: -.02em;
-  text-decoration: none;
-}
-
-.nav-logo span,
-.footer-logo span {
-  color: var(--magenta);
-}
-
-.nav-links {
-  display: flex;
-  gap: 2rem;
-  list-style: none;
-}
-
-.nav-links a {
-  color: var(--periwinkle);
-  text-decoration: none;
-  font-size: .85rem;
-  font-weight: 500;
-  letter-spacing: .05em;
-  text-transform: uppercase;
-  opacity: .7;
-  transition: opacity .2s, color .2s;
-}
-
-.nav-links a:hover {
-  opacity: 1;
-  color: var(--magenta);
-}
-
-.hamburger {
-  display: none;
-  flex-direction: column;
-  gap: 5px;
-  background: none;
-  border: none;
-  padding: 4px;
-}
-
-.hamburger span {
-  display: block;
-  width: 24px;
-  height: 2px;
-  background: var(--periwinkle);
-  border-radius: 2px;
-}
-
-.mobile-menu {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(4, 6, 7, .97);
-  z-index: 99;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 2.5rem;
-}
-
-.mobile-menu.open {
-  display: flex;
-}
-
-.mobile-menu a {
-  font-family: 'Syne', sans-serif;
-  font-size: 2rem;
-  font-weight: 700;
-  color: var(--periwinkle);
-  text-decoration: none;
-}
-
-.mobile-menu a:hover {
-  color: var(--magenta);
-}
-
-.mobile-close {
-  position: absolute;
-  top: 1.5rem;
-  right: 2rem;
-  background: none;
-  border: none;
-  color: var(--periwinkle);
-  font-size: 2rem;
-}
-
-section {
-  position: relative;
-  z-index: 1;
-  padding: 7rem 2rem;
-}
-
-/* 3. PORTADA */
-#hero {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 0 2rem;
-  overflow: hidden;
-}
-
-.hero-eyebrow {
-  font-size: .75rem;
-  letter-spacing: .25em;
-  text-transform: uppercase;
-  color: var(--magenta);
-  margin-bottom: 1.5rem;
-  opacity: 0;
-  animation: fadeUp .8s .3s forwards;
-}
-
-.hero-title {
-  font-family: 'Syne', sans-serif;
-  font-size: clamp(3.5rem, 12vw, 8rem);
-  font-weight: 800;
-  line-height: .92;
-  letter-spacing: -.03em;
-  color: var(--white);
-  opacity: 0;
-  animation: fadeUp .8s .5s forwards;
-  margin-bottom: .3rem;
-}
-
-.hero-title .accent {
-  color: var(--magenta);
-}
-
-.hero-subtitle {
-  font-size: clamp(1rem, 2.5vw, 1.3rem);
-  color: var(--periwinkle);
-  opacity: 0;
-  animation: fadeUp .8s .7s forwards;
-  max-width: 520px;
-  margin: 1.5rem auto 2.5rem;
-  line-height: 1.6;
-  font-weight: 300;
-}
-
-.hero-cta {
-  display: inline-flex;
-  gap: 1rem;
-  opacity: 0;
-  animation: fadeUp .8s .9s forwards;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.btn-primary,
-.btn-outline {
-  padding: .9rem 2.2rem;
-  border-radius: 100px;
-  font-family: 'Syne', sans-serif;
-  font-size: .9rem;
-  letter-spacing: .04em;
-  text-decoration: none;
-  cursor: pointer;
-  display: inline-block;
-  transition: transform .2s, box-shadow .2s;
-}
-
-.btn-primary {
-  background: var(--magenta);
-  color: var(--black);
-  font-weight: 700;
-  border: none;
-}
-
-.btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 0 32px rgba(157, 76, 194, .5);
-}
-
-.btn-outline {
-  border: 1.5px solid rgba(157, 76, 194, .5);
-  color: var(--periwinkle);
-  font-weight: 600;
-  background: none;
-}
-
-.btn-outline:hover {
-  border-color: var(--magenta);
-  color: var(--magenta);
-}
-
-.scroll-indicator {
-  position: absolute;
-  bottom: 2.5rem;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: .5rem;
-  opacity: 0;
-  animation: fadeIn 1s 1.5s forwards;
-}
-
-.scroll-indicator span {
-  font-size: .7rem;
-  letter-spacing: .15em;
-  text-transform: uppercase;
-  opacity: .4;
-}
-
-.scroll-line {
-  width: 1px;
-  height: 48px;
-  background: linear-gradient(to bottom, var(--magenta), transparent);
-  animation: scrollPulse 1.5s ease-in-out infinite;
-}
-
-/* 4. ESTILOS GENERALES */
-.section-label {
-  font-size: .7rem;
-  letter-spacing: .3em;
-  text-transform: uppercase;
-  color: var(--magenta);
-  margin-bottom: 1rem;
-  opacity: .8;
-}
-
-.section-title {
-  font-family: 'Syne', sans-serif;
-  font-size: clamp(2rem, 5vw, 3.5rem);
-  font-weight: 800;
-  color: var(--white);
-  line-height: 1.05;
-  letter-spacing: -.02em;
-  margin-bottom: 1.5rem;
-}
-
-.section-desc {
-  font-size: 1rem;
-  line-height: 1.7;
-  color: var(--periwinkle);
-  opacity: .75;
-  max-width: 560px;
-}
-
-.divider {
-  width: 60px;
-  height: 2px;
-  background: linear-gradient(90deg, var(--magenta), transparent);
-  margin: 1.2rem 0 1.8rem;
-}
-
-/* 5. SOBRE ORIONPATH */
-#about {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 5rem;
-  align-items: center;
-  max-width: 1100px;
-  margin: 0 auto;
-}
-
-.about-visual {
-  position: relative;
-  height: 380px;
-}
-
-.orion-ring {
-  position: absolute;
-  border-radius: 50%;
-  border: 1px solid rgba(157, 76, 194, .2);
-  animation: spin linear infinite;
-}
-
-.orion-ring:nth-child(1) {
-  width: 200px;
-  height: 200px;
-  top: 90px;
-  left: 80px;
-  animation-duration: 20s;
-}
-
-.orion-ring:nth-child(2) {
-  width: 300px;
-  height: 300px;
-  top: 40px;
-  left: 30px;
-  animation-duration: 35s;
-  animation-direction: reverse;
-  border-color: rgba(73, 40, 194, .3);
-}
-
-.orion-ring:nth-child(3) {
-  width: 380px;
-  height: 380px;
-  top: 0;
-  left: -10px;
-  animation-duration: 55s;
-  border-color: rgba(91, 42, 98, .2);
-}
-
-.orion-core {
-  position: absolute;
-  width: 80px;
-  height: 80px;
-  background: radial-gradient(circle, var(--magenta), var(--blue));
-  border-radius: 50%;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  box-shadow: 0 0 60px rgba(157, 76, 194, .6),
-              0 0 120px rgba(157, 76, 194, .2);
-}
-
-.star-dot {
-  position: absolute;
-  width: 4px;
-  height: 4px;
-  background: var(--magenta);
-  border-radius: 50%;
-  box-shadow: 0 0 6px var(--magenta);
-}
-
-/* 6. ÁREAS DE ESTUDIO */
-#areas {
-  max-width: 1100px;
-  margin: 0 auto;
-}
-
-.areas-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 1.5rem;
-  margin-top: 3rem;
-}
-
-.area-card {
-  background: rgba(255, 255, 255, .03);
-  border: 1px solid rgba(157, 76, 194, .12);
-  border-radius: 20px;
-  padding: 2rem;
-  transition: none;
-}
-
-.area-icon {
-  font-size: 2.2rem;
-  margin-bottom: 1rem;
-}
-
-.area-name {
-  font-family: 'Syne', sans-serif;
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--white);
-  margin-bottom: .5rem;
-}
-
-.area-desc {
-  font-size: .875rem;
-  line-height: 1.6;
-  color: var(--periwinkle);
-  opacity: .65;
-}
-
-.area-duration {
-  display: inline-block;
-  margin-top: .9rem;
-  padding: .3rem .8rem;
-  border-radius: 100px;
-  font-size: .72rem;
-  letter-spacing: .05em;
-  background: rgba(157, 76, 194, .12);
-  color: var(--magenta);
-  border: 1px solid rgba(157, 76, 194, .25);
-}
-
-.area-unis {
-  margin-top: 1rem;
-}
-
-.area-unis-label {
-  font-size: .68rem;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  opacity: .5;
-  margin-bottom: .5rem;
-}
-
-.area-uni-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: .4rem;
-}
-
-.area-uni-tag {
-  font-size: .72rem;
-  padding: .3rem .7rem;
-  border-radius: 100px;
-  background: rgba(73, 40, 194, .18);
-  color: #b9a8f7;
-  border: 1px solid rgba(73, 40, 194, .35);
-}
-
-.area-card.special {
-  border-style: dashed;
-  border-color: rgba(157, 76, 194, .3);
-  background: rgba(157, 76, 194, .03);
-}
-
-/* 7. CARRERAS Y FILTROS */
-#careers {
-  max-width: 1100px;
-  margin: 0 auto;
-}
-
-.career-filters {
-  display: flex;
-  gap: .75rem;
-  flex-wrap: wrap;
-  margin: 2rem 0;
-}
-
-.filter-btn {
-  padding: .5rem 1.2rem;
-  border-radius: 100px;
-  border: 1px solid rgba(157, 76, 194, .25);
-  background: transparent;
-  color: var(--periwinkle);
-  font-family: 'DM Sans', sans-serif;
-  font-size: .8rem;
-  letter-spacing: .04em;
-  transition: all .2s;
-}
-
-.filter-btn.active,
-.filter-btn:hover {
-  background: var(--magenta);
-  border-color: var(--magenta);
-  color: var(--white);
-}
-
-.careers-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 1rem;
-}
-
-.career-card {
-  background: rgba(255, 255, 255, .03);
-  border: 1px solid rgba(73, 40, 194, .2);
-  border-radius: 14px;
-  padding: 1.4rem;
-  transition: border-color .25s, background .25s, transform .25s;
-}
-
-.career-card:hover {
-  border-color: var(--blue);
-  background: rgba(73, 40, 194, .08);
-  transform: translateY(-3px);
-}
-
-.career-area-tag {
-  font-size: .68rem;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  color: var(--magenta);
-  margin-bottom: .5rem;
-  opacity: .8;
-}
-
-.career-name {
-  font-family: 'Syne', sans-serif;
-  font-weight: 700;
-  font-size: .95rem;
-  color: var(--white);
-  margin-bottom: .4rem;
-}
-
-.career-desc {
-  font-size: .8rem;
-  line-height: 1.5;
-  color: var(--periwinkle);
-  opacity: .6;
-  margin-bottom: .6rem;
-}
-
-.career-duration {
-  font-size: .78rem;
-  color: var(--periwinkle);
-  opacity: .5;
-}
-
-/* 8. UNIVERSIDADES */
-#universities {
-  max-width: 1100px;
-  margin: 0 auto;
-}
-
-.uni-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1.5rem;
-  margin-top: 3rem;
-}
-
-.uni-card {
-  background: linear-gradient(
-    135deg,
-    rgba(91, 42, 98, .15),
-    rgba(73, 40, 194, .08)
-  );
-  border: 1px solid rgba(157, 76, 194, .15);
-  border-radius: 20px;
-  padding: 2rem;
-  transition: all .3s;
-}
-
-.uni-card:hover {
-  transform: translateY(-5px);
-  border-color: rgba(157, 76, 194, .4);
-  box-shadow: 0 20px 60px rgba(157, 76, 194, .1);
-}
-
-.uni-sigla {
-  font-family: 'Syne', sans-serif;
-  font-size: 2.5rem;
-  font-weight: 800;
-  color: var(--magenta);
-  line-height: 1;
-  margin-bottom: .3rem;
-  opacity: .7;
-}
-
-.uni-name {
-  font-family: 'Syne', sans-serif;
-  font-weight: 700;
-  font-size: 1rem;
-  color: var(--white);
-  margin-bottom: .6rem;
-}
-
-.uni-type {
-  display: inline-block;
-  font-size: .68rem;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  padding: .25rem .7rem;
-  border-radius: 100px;
-  margin-bottom: .8rem;
-}
-
-.uni-type.publica {
-  background: rgba(73, 40, 194, .3);
-  color: #a78bfa;
-}
-
-.uni-type.privada {
-  background: rgba(157, 76, 194, .15);
-  color: var(--magenta);
-}
-
-.uni-desc {
-  font-size: .84rem;
-  line-height: 1.6;
-  color: var(--periwinkle);
-  opacity: .65;
-}
-
-.uni-link {
-  display: inline-flex;
-  align-items: center;
-  gap: .35rem;
-  margin-top: 1.1rem;
-  font-size: .78rem;
-  font-weight: 600;
-  color: var(--magenta);
-  text-decoration: none;
-  transition: opacity .2s;
-}
-
-.uni-link:hover {
-  opacity: .75;
-}
-
-/* 9. CÓMO INGRESAR */
-#howto {
-  max-width: 900px;
-  margin: 0 auto;
-}
-
-.steps {
-  display: flex;
-  flex-direction: column;
-  margin-top: 3rem;
-  position: relative;
-}
-
-.steps::before {
-  content: '';
-  position: absolute;
-  left: 28px;
-  top: 0;
-  bottom: 0;
-  width: 1px;
-  background: linear-gradient(
-    to bottom,
-    var(--magenta),
-    var(--blue),
-    transparent
-  );
-}
-
-.step {
-  display: flex;
-  gap: 2rem;
-  align-items: flex-start;
-  padding-bottom: 3rem;
-  position: relative;
-}
-
-.step-num {
-  width: 56px;
-  height: 56px;
-  min-width: 56px;
-  border-radius: 50%;
-  background: var(--black);
-  border: 2px solid var(--magenta);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Syne', sans-serif;
-  font-weight: 800;
-  font-size: 1.1rem;
-  color: var(--magenta);
-  position: relative;
-  z-index: 1;
-  box-shadow: 0 0 20px rgba(157, 76, 194, .3);
-}
-
-.step-title {
-  font-family: 'Syne', sans-serif;
-  font-weight: 700;
-  font-size: 1.15rem;
-  color: var(--white);
-  margin-bottom: .4rem;
-}
-
-.step-text {
-  font-size: .9rem;
-  line-height: 1.7;
-  color: var(--periwinkle);
-  opacity: .7;
-}
-
-/* 10. TEST VOCACIONAL */
-#test {
-  max-width: 760px;
-  margin: 0 auto;
-  text-align: center;
-}
-
-.test-box {
-  background: rgba(255, 255, 255, .02);
-  border: 1px solid rgba(157, 76, 194, .2);
-  border-radius: 24px;
-  padding: 3rem 2.5rem;
-  margin-top: 3rem;
-}
-
-.test-progress-bar {
-  height: 4px;
-  background: rgba(255, 255, 255, .08);
-  border-radius: 20px;
-  margin-bottom: 2.5rem;
-  overflow: hidden;
-}
-
-.test-progress-fill {
-  height: 100%;
-  width: 0%;
-  background: linear-gradient(90deg, var(--blue), var(--magenta));
-  border-radius: 20px;
-  transition: width .5s ease;
-}
-
-.test-question {
-  font-family: 'Syne', sans-serif;
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--white);
-  margin-bottom: 1.5rem;
-  line-height: 1.5;
-  min-height: 3.5rem;
-}
-
-.test-hint {
-  color: var(--periwinkle);
-  opacity: .7;
-  font-size: .85rem;
-  line-height: 1.6;
-  text-align: left;
-  margin-bottom: .5rem;
-}
-
-.test-options {
-  display: flex;
-  flex-direction: column;
-  gap: .75rem;
-  margin-bottom: 2rem;
-}
-
-.test-option {
-  width: 100%;
-  display: block;
-  padding: 1rem 1.25rem;
-  border: 1px solid rgba(157, 76, 194, .25);
-  border-radius: 12px;
-  background: rgba(255, 255, 255, .015);
-  color: var(--periwinkle);
-  font-family: 'DM Sans', sans-serif;
-  font-size: .95rem;
-  line-height: 1.5;
-  text-align: left;
-  overflow-wrap: anywhere;
-  transition: border-color .2s, background .2s, color .2s;
-}
-
-.test-option:hover {
-  border-color: var(--magenta);
-  background: rgba(157, 76, 194, .08);
-  color: var(--white);
-}
-
-.test-option.selected {
-  border-color: var(--magenta);
-  background: rgba(157, 76, 194, .16);
-  color: var(--white);
-  box-shadow: inset 3px 0 var(--magenta);
-}
-
-.test-nav {
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.test-nav button {
-  min-width: 140px;
-}
-
-.test-result {
-  display: none;
-  animation: fadeUp .6s forwards;
-}
-
-.result-emoji {
-  font-size: 3rem;
-  margin-bottom: 1rem;
-}
-
-.result-title {
-  font-family: 'Syne', sans-serif;
-  font-size: clamp(1.5rem, 4vw, 1.8rem);
-  font-weight: 800;
-  color: var(--white);
-  margin-bottom: .75rem;
-  line-height: 1.3;
-}
-
-.result-desc {
-  font-size: .95rem;
-  line-height: 1.7;
-  opacity: .75;
-  margin-bottom: 1.5rem;
-}
-
-/* Afinidades porcentuales */
-.result-areas {
-  text-align: left;
-  margin: 2rem 0;
-  padding: 1.5rem;
-  border: 1px solid rgba(157, 76, 194, .15);
-  border-radius: 18px;
-  background: rgba(255, 255, 255, .015);
-}
-
-.result-areas h4 {
-  color: var(--white);
-  font-family: 'Syne', sans-serif;
-  font-size: 1.05rem;
-  margin-bottom: 1.25rem;
-}
-
-.result-area-item {
-  margin: 1.1rem 0;
-}
-
-.result-area-label {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  font-size: .85rem;
-  line-height: 1.5;
-  margin-bottom: .5rem;
-}
-
-.result-area-label span {
-  color: var(--periwinkle);
-}
-
-.result-area-label strong {
-  color: var(--magenta);
-  font-family: 'Syne', sans-serif;
-  white-space: nowrap;
-}
-
-.result-bar {
-  height: 8px;
-  width: 100%;
-  overflow: hidden;
-  border-radius: 20px;
-  background: rgba(255, 255, 255, .08);
-}
-
-.result-bar-fill {
-  height: 100%;
-  border-radius: inherit;
-  background: linear-gradient(90deg, var(--blue), var(--magenta));
-  transition: width .6s ease;
-}
-
-/* Recomendaciones de carreras */
-.result-careers {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-  gap: .85rem;
-  margin-top: 1rem;
-  text-align: left;
-}
-
-.result-career-card {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: .65rem;
-  min-width: 0;
-  padding: 1.2rem;
-  border: 1px solid rgba(157, 76, 194, .2);
-  background: rgba(255, 255, 255, .025);
-  border-radius: 14px;
-  transition: border-color .2s, background .2s, transform .2s;
-}
-
-.result-career-card:hover {
-  border-color: rgba(157, 76, 194, .55);
-  background: rgba(157, 76, 194, .06);
-  transform: translateY(-2px);
-}
-
-.result-career-card strong {
-  color: var(--white);
-  font-family: 'Syne', sans-serif;
-  font-size: .95rem;
-  line-height: 1.4;
-  overflow-wrap: anywhere;
-}
-
-.result-career-card p {
-  color: var(--periwinkle);
-  font-size: .82rem;
-  line-height: 1.55;
-  opacity: .8;
-  overflow-wrap: anywhere;
-}
-
-.result-career-card small {
-  color: var(--periwinkle);
-  opacity: .65;
-  line-height: 1.5;
-}
-
-.result-tag {
-  display: inline-block;
-  padding: .35rem .8rem;
-  background: rgba(157, 76, 194, .15);
-  border: 1px solid rgba(157, 76, 194, .3);
-  border-radius: 100px;
-  font-size: .78rem;
-  color: var(--periwinkle);
-  line-height: 1.5;
-}
-
-.result-career-card .result-tag {
-  max-width: 100%;
-  overflow-wrap: anywhere;
-}
-
-#resultUnis {
-  display: flex;
-  flex-wrap: wrap;
-  gap: .5rem;
-  margin-top: 1rem;
-}
-
-/* 11. FOOTER */
-footer {
-  position: relative;
-  z-index: 1;
-  padding: 3rem 2rem;
-  text-align: center;
-  border-top: 1px solid rgba(157, 76, 194, .1);
-}
-
-.footer-logo {
-  font-family: 'Syne', sans-serif;
-  font-size: 1.8rem;
-  font-weight: 800;
-  color: var(--white);
-  margin-bottom: .5rem;
-}
-
-.footer-sub {
-  font-size: .8rem;
-  opacity: .4;
-  margin-bottom: 2rem;
-}
-
-.footer-links {
-  display: flex;
-  gap: 2rem;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.footer-links a {
-  font-size: .8rem;
-  color: var(--periwinkle);
-  opacity: .5;
-  text-decoration: none;
-  transition: opacity .2s;
-}
-
-.footer-links a:hover {
-  opacity: 1;
-}
-
-.footer-bottom {
-  margin-top: 2rem;
-  font-size: .75rem;
-  opacity: .3;
-}
-
-/* Animaciones al desplazarse */
-.reveal {
-  opacity: 0;
-  transform: translateY(30px);
-  transition: opacity .7s ease, transform .7s ease;
-}
-
-.reveal.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* 12. ANIMACIONES */
-@keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(24px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-@keyframes scrollPulse {
-  0%, 100% {
-    opacity: .2;
-    transform: scaleY(.8);
-  }
-  50% {
-    opacity: 1;
-    transform: scaleY(1);
-  }
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
-}
-
-/* 13. DISEÑO RESPONSIVE */
-@media (max-width: 900px) {
-  nav {
-    padding: 1rem 1.5rem;
-  }
-
-  .nav-links {
-    gap: 1rem;
-  }
-
-  #about {
-    gap: 2rem;
-  }
-
-  .about-visual {
-    transform: scale(.85);
-    transform-origin: center;
-  }
-}
-
-@media (max-width: 768px) {
-  nav {
-    padding: 1rem 1.5rem;
-  }
-
-  .nav-links {
-    display: none;
-  }
-
-  .hamburger {
-    display: flex;
-  }
-
-  #about {
-    grid-template-columns: 1fr;
-    gap: 2rem;
-  }
-
-  .about-visual {
-    height: 260px;
-    transform: scale(.75);
-    transform-origin: top center;
-  }
-
-  .orion-ring:nth-child(3) {
-    display: none;
-  }
-
-  section {
-    padding: 5rem 1.5rem;
-  }
-
-  .steps::before {
-    left: 24px;
-  }
-
-  .step {
-    gap: 1.25rem;
-  }
-
-  .step-num {
-    width: 48px;
-    height: 48px;
-    min-width: 48px;
-    font-size: 1rem;
-  }
-
-  .test-box {
-    padding: 2rem 1.5rem;
-  }
-
-  .uni-grid {
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  }
-}
-
-@media (max-width: 480px) {
-  section {
-    padding: 4rem 1rem;
-  }
-
-  #hero {
-    padding: 0 1rem;
-  }
-
-  .hero-title {
-    font-size: clamp(3rem, 15vw, 5rem);
-  }
-
-  .hero-cta {
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-  }
-
-  .btn-primary,
-  .btn-outline {
-    width: 100%;
-    text-align: center;
-  }
-
-  .areas-grid,
-  .careers-grid,
-  .uni-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .test-box {
-    padding: 1.5rem 1rem;
-    border-radius: 18px;
-  }
-
-  .test-question {
-    font-size: 1.1rem;
-  }
-
-  .test-option {
-    padding: .9rem 1rem;
-    font-size: .9rem;
-  }
-
-  .test-nav {
-    flex-direction: column;
-  }
-
-  .test-nav button {
-    width: 100%;
-  }
-
-  .result-areas {
-    padding: 1rem;
-  }
-
-  .result-careers {
-    grid-template-columns: 1fr;
-  }
-
-  .result-area-label {
-    font-size: .8rem;
-  }
-
-  .footer-links {
-    gap: 1rem;
-  }
-}
-
-/* Respeta la preferencia de movimiento reducido */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    scroll-behavior: auto !important;
-    animation-duration: .01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: .01ms !important;
-  }
-
-  .reveal {
-    opacity: 1;
-    transform: none;
-  }
+   12. Animaciones (@keyframes)
+   13. Responsive (media queries)
+   ========================================================================== */
+
+
+/* --------------------------------------------------------------------------
+   1. VARIABLES DE COLOR Y RESET GENERAL
+-------------------------------------------------------------------------- */
+:root{
+  --periwinkle:#E3D9FC;
+  --magenta:#9d4cc2;
+  --blue:#4928C2;
+  --velvet:#5B2A62;
+  --black:#040607;
+  --white:#f8f4ff;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--black);color:var(--periwinkle);font-family:'DM Sans',sans-serif;overflow-x:hidden}
+#stars-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
+
+
+/* --------------------------------------------------------------------------
+   2. BARRA DE NAVEGACIÓN (NAV) + MENÚ MÓVIL
+-------------------------------------------------------------------------- */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1.2rem 3rem;
+  background:rgba(4,6,7,.7);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid rgba(191,64,250,.15);
+  transition:all .3s;
+}
+.nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.5rem;color:var(--white);letter-spacing:-.02em}
+.nav-logo span{color:var(--magenta)}
+
+.nav-links{display:flex;gap:2rem;list-style:none}
+.nav-links a{color:var(--periwinkle);text-decoration:none;font-size:.85rem;font-weight:500;letter-spacing:.05em;text-transform:uppercase;opacity:.7;transition:opacity .2s,color .2s}
+.nav-links a:hover{opacity:1;color:var(--magenta)}
+
+.hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px}
+.hamburger span{display:block;width:24px;height:2px;background:var(--periwinkle);border-radius:2px;transition:all .3s}
+
+.mobile-menu{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(4,6,7,.97);z-index:99;flex-direction:column;align-items:center;justify-content:center;gap:2.5rem}
+.mobile-menu.open{display:flex}
+.mobile-menu a{font-family:'Syne',sans-serif;font-size:2rem;font-weight:700;color:var(--periwinkle);text-decoration:none;transition:color .2s}
+.mobile-menu a:hover{color:var(--magenta)}
+.mobile-close{position:absolute;top:1.5rem;right:2rem;background:none;border:none;color:var(--periwinkle);font-size:2rem;cursor:pointer}
+
+section{position:relative;z-index:1;padding:7rem 2rem}
+
+
+/* --------------------------------------------------------------------------
+   3. SECCIÓN HERO (PORTADA)
+-------------------------------------------------------------------------- */
+#hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 2rem;overflow:hidden}
+.hero-eyebrow{font-size:.75rem;letter-spacing:.25em;text-transform:uppercase;color:var(--magenta);margin-bottom:1.5rem;opacity:0;animation:fadeUp .8s .3s forwards}
+.hero-title{font-family:'Syne',sans-serif;font-size:clamp(3.5rem,12vw,8rem);font-weight:800;line-height:.92;letter-spacing:-.03em;color:var(--white);opacity:0;animation:fadeUp .8s .5s forwards;margin-bottom:.3rem}
+.hero-title .accent{color:var(--magenta)}
+.hero-subtitle{font-size:clamp(1rem,2.5vw,1.3rem);color:var(--periwinkle);opacity:0;animation:fadeUp .8s .7s forwards;max-width:520px;margin:1.5rem auto 2.5rem;line-height:1.6;font-weight:300}
+.hero-cta{display:inline-flex;gap:1rem;opacity:0;animation:fadeUp .8s .9s forwards;flex-wrap:wrap;justify-content:center}
+
+.btn-primary{padding:.9rem 2.2rem;background:var(--magenta);color:var(--black);font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;letter-spacing:.04em;border:none;border-radius:100px;text-decoration:none;transition:transform .2s,box-shadow .2s;cursor:pointer;display:inline-block}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 0 32px rgba(191,64,250,.5)}
+
+.btn-outline{padding:.9rem 2.2rem;border:1.5px solid rgba(191,64,250,.5);color:var(--periwinkle);font-family:'Syne',sans-serif;font-weight:600;font-size:.9rem;letter-spacing:.04em;border-radius:100px;text-decoration:none;transition:border-color .2s,color .2s;cursor:pointer;display:inline-block;background:none}
+.btn-outline:hover{border-color:var(--magenta);color:var(--magenta)}
+
+.scroll-indicator{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.5rem;opacity:0;animation:fadeIn 1s 1.5s forwards}
+.scroll-indicator span{font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;opacity:.4}
+.scroll-line{width:1px;height:48px;background:linear-gradient(to bottom,var(--magenta),transparent);animation:scrollPulse 1.5s ease-in-out infinite}
+
+
+/* --------------------------------------------------------------------------
+   4. ESTILOS GENERALES REUTILIZABLES DE "SECCIÓN"
+-------------------------------------------------------------------------- */
+.section-label{font-size:.7rem;letter-spacing:.3em;text-transform:uppercase;color:var(--magenta);margin-bottom:1rem;opacity:.8}
+.section-title{font-family:'Syne',sans-serif;font-size:clamp(2rem,5vw,3.5rem);font-weight:800;color:var(--white);line-height:1.05;letter-spacing:-.02em;margin-bottom:1.5rem}
+.section-desc{font-size:1rem;line-height:1.7;color:var(--periwinkle);opacity:.75;max-width:560px}
+.divider{width:60px;height:2px;background:linear-gradient(90deg,var(--magenta),transparent);margin:1.2rem 0 1.8rem}
+
+
+/* --------------------------------------------------------------------------
+   5. SECCIÓN "SOBRE ORIONPATH" (ABOUT)
+-------------------------------------------------------------------------- */
+#about{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;max-width:1100px;margin:0 auto}
+.about-visual{position:relative;height:380px}
+.orion-ring{position:absolute;border-radius:50%;border:1px solid rgba(191,64,250,.2);animation:spin linear infinite}
+.orion-ring:nth-child(1){width:200px;height:200px;top:90px;left:80px;animation-duration:20s}
+.orion-ring:nth-child(2){width:300px;height:300px;top:40px;left:30px;animation-duration:35s;animation-direction:reverse;border-color:rgba(73,40,194,.3)}
+.orion-ring:nth-child(3){width:380px;height:380px;top:0;left:-10px;animation-duration:55s;border-color:rgba(91,42,98,.2)}
+.orion-core{position:absolute;width:80px;height:80px;background:radial-gradient(circle,var(--magenta),var(--blue));border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%);box-shadow:0 0 60px rgba(191,64,250,.6),0 0 120px rgba(191,64,250,.2)}
+.star-dot{position:absolute;width:4px;height:4px;background:var(--magenta);border-radius:50%;box-shadow:0 0 6px var(--magenta)}
+
+
+/* --------------------------------------------------------------------------
+   6. SECCIÓN "ÁREAS DE ESTUDIO"
+-------------------------------------------------------------------------- */
+#areas{max-width:1100px;margin:0 auto}
+.areas-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.5rem;margin-top:3rem}
+
+.area-card{
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(191,64,250,.12);
+  border-radius:20px;
+  padding:2rem;
+  /* Sin transición ni cambio de color/fondo en :hover a propósito
+     (ver regla vacía más abajo) — para que la tarjeta no "brille"
+     ni salte al pasar el mouse, algo que confundía a los usuarios. */
+  transition:none;
+}
+.area-card:hover{
+  /* intencionalmente vacío: sin efecto de hover */
+}
+
+.area-icon{font-size:2.2rem;margin-bottom:1rem}
+.area-name{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;color:var(--white);margin-bottom:.5rem}
+.area-desc{font-size:.875rem;line-height:1.6;color:var(--periwinkle);opacity:.65}
+
+/* Chip de duración estimada (usado en la tarjeta de Deporte) */
+.area-duration{
+  display:inline-block;margin-top:.9rem;padding:.3rem .8rem;border-radius:100px;
+  font-size:.72rem;letter-spacing:.05em;background:rgba(191,64,250,.12);
+  color:var(--magenta);border:1px solid rgba(191,64,250,.25);
+}
+.area-unis{margin-top:1rem}
+.area-unis-label{font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;opacity:.5;margin-bottom:.5rem}
+.area-uni-tags{display:flex;flex-wrap:wrap;gap:.4rem}
+.area-uni-tag{
+  font-size:.72rem;padding:.3rem .7rem;border-radius:100px;
+  background:rgba(73,40,194,.18);color:#b9a8f7;border:1px solid rgba(73,40,194,.35);
+}
+
+/* Tarjeta especial "Estudiar en el exterior": borde punteado para
+   distinguirla como opción complementaria, no un área vocacional más. */
+.area-card.special{
+  border-style:dashed;border-color:rgba(191,64,250,.3);background:rgba(191,64,250,.03);
+}
+
+
+/* --------------------------------------------------------------------------
+   7. SECCIÓN "CARRERAS" + FILTROS
+   Ahora cada carrera muestra también una descripción corta (career-desc),
+   además del nombre y la duración — a pedido, esto aplica a TODAS las
+   carreras, no solo a un área puntual.
+-------------------------------------------------------------------------- */
+#careers{max-width:1100px;margin:0 auto}
+.career-filters{display:flex;gap:.75rem;flex-wrap:wrap;margin:2rem 0}
+.filter-btn{padding:.5rem 1.2rem;border-radius:100px;border:1px solid rgba(191,64,250,.25);background:transparent;color:var(--periwinkle);font-family:'DM Sans',sans-serif;font-size:.8rem;letter-spacing:.04em;cursor:pointer;transition:all .2s}
+.filter-btn.active,.filter-btn:hover{background:var(--magenta);border-color:var(--magenta);color:var(--black)}
+
+.careers-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1rem}
+.career-card{background:rgba(255,255,255,.03);border:1px solid rgba(73,40,194,.2);border-radius:14px;padding:1.4rem;transition:all .25s}
+.career-card:hover{border-color:var(--blue);background:rgba(73,40,194,.08);transform:translateY(-3px)}
+.career-area-tag{font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--magenta);margin-bottom:.5rem;opacity:.8}
+.career-name{font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;color:var(--white);margin-bottom:.4rem}
+/* NUEVO: descripción corta de la carrera, debajo del nombre */
+.career-desc{font-size:.8rem;line-height:1.5;color:var(--periwinkle);opacity:.6;margin-bottom:.6rem}
+.career-duration{font-size:.78rem;color:var(--periwinkle);opacity:.5}
+
+
+/* --------------------------------------------------------------------------
+   8. SECCIÓN "UNIVERSIDADES"
+   Se agregó un link "Visitar sitio oficial" en cada tarjeta.
+-------------------------------------------------------------------------- */
+#universities{max-width:1100px;margin:0 auto}
+.uni-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem;margin-top:3rem}
+.uni-card{background:linear-gradient(135deg,rgba(91,42,98,.15),rgba(73,40,194,.08));border:1px solid rgba(191,64,250,.15);border-radius:20px;padding:2rem;transition:all .3s}
+.uni-card:hover{transform:translateY(-5px);border-color:rgba(191,64,250,.4);box-shadow:0 20px 60px rgba(191,64,250,.1)}
+.uni-sigla{font-family:'Syne',sans-serif;font-size:2.5rem;font-weight:800;color:var(--magenta);line-height:1;margin-bottom:.3rem;opacity:.7}
+.uni-name{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;color:var(--white);margin-bottom:.6rem}
+.uni-type{display:inline-block;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:.25rem .7rem;border-radius:100px;margin-bottom:.8rem}
+.uni-type.publica{background:rgba(73,40,194,.3);color:#a78bfa}
+.uni-type.privada{background:rgba(191,64,250,.15);color:var(--magenta)}
+.uni-desc{font-size:.84rem;line-height:1.6;color:var(--periwinkle);opacity:.65}
+/* NUEVO: link al sitio oficial de cada universidad */
+.uni-link{
+  display:inline-flex;align-items:center;gap:.35rem;margin-top:1.1rem;
+  font-size:.78rem;font-weight:600;color:var(--magenta);text-decoration:none;
+  letter-spacing:.02em;transition:opacity .2s;
+}
+.uni-link:hover{opacity:.75}
+
+
+/* --------------------------------------------------------------------------
+   9. SECCIÓN "¿CÓMO INGRESAR?" — LÍNEA DE TIEMPO DE PASOS
+-------------------------------------------------------------------------- */
+#howto{max-width:900px;margin:0 auto}
+.steps{display:flex;flex-direction:column;gap:0;margin-top:3rem;position:relative}
+.steps::before{content:'';position:absolute;left:28px;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,var(--magenta),var(--blue),transparent)}
+.step{display:flex;gap:2rem;align-items:flex-start;padding-bottom:3rem;position:relative}
+.step-num{width:56px;height:56px;min-width:56px;border-radius:50%;background:var(--black);border:2px solid var(--magenta);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;color:var(--magenta);position:relative;z-index:1;box-shadow:0 0 20px rgba(191,64,250,.3)}
+.step-title{font-family:'Syne',sans-serif;font-weight:700;font-size:1.15rem;color:var(--white);margin-bottom:.4rem}
+.step-text{font-size:.9rem;line-height:1.7;color:var(--periwinkle);opacity:.7}
+
+
+/* --------------------------------------------------------------------------
+   10. SECCIÓN "TEST VOCACIONAL"
+-------------------------------------------------------------------------- */
+#test{max-width:760px;margin:0 auto;text-align:center}
+.test-box{background:rgba(255,255,255,.02);border:1px solid rgba(191,64,250,.2);border-radius:24px;padding:3rem 2.5rem;margin-top:3rem}
+.test-progress-bar{height:3px;background:rgba(255,255,255,.08);border-radius:2px;margin-bottom:2.5rem;overflow:hidden}
+.test-progress-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--magenta));border-radius:2px;transition:width .5s ease;width:0%}
+.test-question{font-family:'Syne',sans-serif;font-size:1.25rem;font-weight:700;color:var(--white);margin-bottom:2rem;line-height:1.4;min-height:3.5rem}
+.test-options{display:flex;flex-direction:column;gap:.75rem;margin-bottom:2rem}
+.test-option{padding:1rem 1.5rem;border:1px solid rgba(191,64,250,.2);border-radius:12px;background:transparent;color:var(--periwinkle);font-family:'DM Sans',sans-serif;font-size:.95rem;text-align:left;cursor:pointer;transition:all .2s}
+.test-option:hover,.test-option.selected{border-color:var(--magenta);background:rgba(191,64,250,.1);color:var(--white)}
+.test-nav{display:flex;gap:1rem;justify-content:center}
+
+.test-result{display:none;animation:fadeUp .6s forwards}
+.result-emoji{font-size:3rem;margin-bottom:1rem}
+.result-title{font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;color:var(--white);margin-bottom:.5rem}
+.result-desc{font-size:.95rem;line-height:1.7;opacity:.75;margin-bottom:1.5rem}
+.result-careers{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center}
+.result-tag{padding:.4rem 1rem;background:rgba(191,64,250,.15);border:1px solid rgba(191,64,250,.3);border-radius:100px;font-size:.8rem;color:var(--magenta)}
+
+
+/* --------------------------------------------------------------------------
+   11. FOOTER
+   (La sección "Contacto" y sus estilos ya fueron eliminados; no se
+   reincorporaron en esta versión.)
+-------------------------------------------------------------------------- */
+footer{position:relative;z-index:1;padding:3rem 2rem;text-align:center;border-top:1px solid rgba(191,64,250,.1)}
+.footer-logo{font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;color:var(--white);margin-bottom:.5rem}
+.footer-logo span{color:var(--magenta)}
+.footer-sub{font-size:.8rem;opacity:.4;margin-bottom:2rem}
+.footer-links{display:flex;gap:2rem;justify-content:center;flex-wrap:wrap}
+.footer-links a{font-size:.8rem;color:var(--periwinkle);opacity:.5;text-decoration:none;transition:opacity .2s}
+.footer-links a:hover{opacity:1}
+.footer-bottom{margin-top:2rem;font-size:.75rem;opacity:.3}
+
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+
+/* --------------------------------------------------------------------------
+   12. ANIMACIONES (@keyframes)
+-------------------------------------------------------------------------- */
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes scrollPulse{0%,100%{opacity:.2;transform:scaleY(.8)}50%{opacity:1;transform:scaleY(1)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+
+
+/* --------------------------------------------------------------------------
+   13. RESPONSIVE (MEDIA QUERIES)
+-------------------------------------------------------------------------- */
+@media(max-width:768px){
+  nav{padding:1rem 1.5rem}
+  .nav-links{display:none}
+  .hamburger{display:flex}
+  #about{grid-template-columns:1fr;gap:2rem}
+  .about-visual{height:260px}
+  .orion-ring:nth-child(3){display:none}
+  section{padding:5rem 1.5rem}
+  .steps::before{left:24px}
+  .step-num{width:48px;height:48px;min-width:48px;font-size:1rem}
+  .test-box{padding:2rem 1.5rem}
+}
+@media(max-width:480px){
+  .hero-cta{flex-direction:column;align-items:center}
+  .btn-primary,.btn-outline{width:100%;text-align:center}
 }
