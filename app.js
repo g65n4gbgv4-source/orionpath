@@ -1,4 +1,3 @@
-
 /* ==========================================================
    ORIONPATH — TEST VOCACIONAL MULTIÁREA
    Permite múltiples respuestas y calcula afinidades
@@ -9,58 +8,93 @@
 let currentQ = 0;
 let userAnswers = [];
 
-/* Inicializa las respuestas múltiples. */
+
+/* ==========================================================
+   TEST VOCACIONAL
+   ========================================================== */
+
 function initAnswers() {
-  userAnswers = questions.map((_, i) =>
-    Array.isArray(userAnswers[i]) ? userAnswers[i] : []
-  );
+  userAnswers = questions.map(() => []);
 }
 
-/* Dibuja la pregunta y conserva las selecciones anteriores. */
+
+/* ----------------------------------------------------------
+   Cargar pregunta
+   ---------------------------------------------------------- */
+
 function loadQuestion() {
   const qData = questions[currentQ];
   const question = document.getElementById('testQuestion');
   const optsContainer = document.getElementById('testOptions');
 
+  if (!qData || !question || !optsContainer) return;
+
   question.innerText = qData.q;
   optsContainer.innerHTML = '';
 
-  // Instrucción para el usuario.
   const hint = document.createElement('p');
   hint.className = 'test-hint';
   hint.textContent =
     'Podés seleccionar varias opciones que te representen.';
   optsContainer.appendChild(hint);
 
-  qData.opts.forEach((opt) => {
-    const selected = (userAnswers[currentQ] || [])
-      .includes(opt.area);
+  qData.opts.forEach(opt => {
+    const selected =
+      (userAnswers[currentQ] || []).includes(opt.area);
 
     const btn = document.createElement('button');
+
     btn.type = 'button';
     btn.className =
       'test-option' + (selected ? ' selected' : '');
-    btn.setAttribute('aria-pressed', String(selected));
-    btn.innerText = (selected ? '✓  ' : '') + opt.text;
+
+    btn.setAttribute(
+      'aria-pressed',
+      String(selected)
+    );
+
+    btn.innerText =
+      (selected ? '✓  ' : '') + opt.text;
 
     btn.onclick = () => selectOption(opt.area);
+
     optsContainer.appendChild(btn);
   });
 
-  const pct = ((currentQ + 1) / questions.length) * 100;
-  document.getElementById('testProgress').style.width =
-    pct + '%';
+  const pct =
+    ((currentQ + 1) / questions.length) * 100;
 
-  document.getElementById('testPrev').style.display =
-    currentQ > 0 ? 'inline-block' : 'none';
+  const progress =
+    document.getElementById('testProgress');
 
-  document.getElementById('testNext').innerText =
-    currentQ === questions.length - 1
-      ? 'Ver mis resultados →'
-      : 'Siguiente →';
+  if (progress) {
+    progress.style.width = `${pct}%`;
+  }
+
+  const prev =
+    document.getElementById('testPrev');
+
+  if (prev) {
+    prev.style.display =
+      currentQ > 0 ? 'inline-block' : 'none';
+  }
+
+  const next =
+    document.getElementById('testNext');
+
+  if (next) {
+    next.innerText =
+      currentQ === questions.length - 1
+        ? 'Ver mis resultados →'
+        : 'Siguiente →';
+  }
 }
 
-/* Alterna una selección sin borrar las demás. */
+
+/* ----------------------------------------------------------
+   Seleccionar / quitar opción
+   ---------------------------------------------------------- */
+
 function selectOption(area) {
   if (!Array.isArray(userAnswers[currentQ])) {
     userAnswers[currentQ] = [];
@@ -78,13 +112,19 @@ function selectOption(area) {
   loadQuestion();
 }
 
-/* Avanza solamente si hay al menos una respuesta. */
+
+/* ----------------------------------------------------------
+   Siguiente pregunta
+   ---------------------------------------------------------- */
+
 function nextQuestion() {
-  if (
-    !Array.isArray(userAnswers[currentQ]) ||
-    userAnswers[currentQ].length === 0
-  ) {
-    alert('Elegí al menos una opción para continuar.');
+  const currentAnswers =
+    userAnswers[currentQ] || [];
+
+  if (currentAnswers.length === 0) {
+    alert(
+      'Elegí al menos una opción para continuar.'
+    );
     return;
   }
 
@@ -96,6 +136,11 @@ function nextQuestion() {
   }
 }
 
+
+/* ----------------------------------------------------------
+   Pregunta anterior
+   ---------------------------------------------------------- */
+
 function prevQuestion() {
   if (currentQ > 0) {
     currentQ--;
@@ -103,9 +148,14 @@ function prevQuestion() {
   }
 }
 
-/* Calcula porcentajes y recomienda carreras de distintas áreas. */
+
+/* ==========================================================
+   RESULTADOS
+   ========================================================== */
+
 function showResult() {
   const areas = Object.keys(resultsInfo);
+
   const scores = Object.fromEntries(
     areas.map(area => [area, 0])
   );
@@ -114,7 +164,12 @@ function showResult() {
 
   userAnswers.forEach(answer => {
     (answer || []).forEach(area => {
-      if (Object.prototype.hasOwnProperty.call(scores, area)) {
+      if (
+        Object.prototype.hasOwnProperty.call(
+          scores,
+          area
+        )
+      ) {
         scores[area]++;
         totalSelections++;
       }
@@ -122,9 +177,16 @@ function showResult() {
   });
 
   if (totalSelections === 0) {
-    alert('Respondé al menos una pregunta.');
+    alert(
+      'Respondé al menos una pregunta.'
+    );
     return;
   }
+
+
+  /* --------------------------------------------------------
+     Ordenar áreas según afinidad
+     -------------------------------------------------------- */
 
   const results = areas
     .map(area => ({
@@ -134,242 +196,519 @@ function showResult() {
         (scores[area] / totalSelections) * 100
       )
     }))
-    .sort((a, b) => b.score - a.score);
+    .sort((a, b) => {
+      if (b.score !== a.score) {
+        return b.score - a.score;
+      }
 
-  const top = results.filter(r => r.score > 0);
-  const main = resultsInfo[top[0].area];
+      return b.percentage - a.percentage;
+    });
 
-  document.getElementById('testContent').style.display = 'none';
-  document.getElementById('testProgress').style.width = '100%';
 
-  document.getElementById('resultEmoji').innerText = '✨';
-  document.getElementById('resultTitle').innerText =
-    'Tu perfil tiene varias posibilidades';
-  document.getElementById('resultDesc').innerText =
-    'Tus respuestas muestran diferentes intereses. ' +
-    'Explorá estas áreas como punto de partida, no como ' +
-    'una decisión definitiva. Podés combinar intereses ' +
-    'y descubrir carreras que nunca habías considerado.';
+  const topAreas = results
+    .filter(result => result.score > 0)
+    .slice(0, 3);
 
-  /* Crear el bloque de afinidades sin modificar el HTML. */
-  let areasBox = document.getElementById('resultAreas');
+
+  /* --------------------------------------------------------
+     Mostrar resultados
+     -------------------------------------------------------- */
+
+  const testContent =
+    document.getElementById('testContent');
+
+  const testResult =
+    document.getElementById('testResult');
+
+  const progress =
+    document.getElementById('testProgress');
+
+  if (testContent) {
+    testContent.style.display = 'none';
+  }
+
+  if (progress) {
+    progress.style.width = '100%';
+  }
+
+  if (testResult) {
+    testResult.style.display = 'block';
+  }
+
+
+  /* --------------------------------------------------------
+     Título
+     -------------------------------------------------------- */
+
+  const resultEmoji =
+    document.getElementById('resultEmoji');
+
+  const resultTitle =
+    document.getElementById('resultTitle');
+
+  const resultDesc =
+    document.getElementById('resultDesc');
+
+  if (resultEmoji) {
+    resultEmoji.innerText = '✨';
+  }
+
+  if (resultTitle) {
+    resultTitle.innerText =
+      'Estas son tus áreas de mayor afinidad';
+  }
+
+  if (resultDesc) {
+    resultDesc.innerText =
+      'Tus respuestas muestran intereses que pueden orientarte hacia distintas áreas de estudio. Este resultado es una guía para explorar opciones y no reemplaza una orientación vocacional profesional.';
+  }
+
+
+  /* ========================================================
+     MAPA DE INTERESES
+     ======================================================== */
+
+  let areasBox =
+    document.getElementById('resultAreas');
 
   if (!areasBox) {
     areasBox = document.createElement('div');
+
     areasBox.id = 'resultAreas';
     areasBox.className = 'result-areas';
 
-    const careersTitle =
-      document.getElementById('resultCareers').previousElementSibling;
+    const careersBox =
+      document.getElementById('resultCareers');
 
-    careersTitle.parentNode.insertBefore(areasBox, careersTitle);
+    if (careersBox) {
+      careersBox.parentNode.insertBefore(
+        areasBox,
+        careersBox
+      );
+    }
   }
 
-  areasBox.innerHTML = '<h4>Tu mapa de intereses</h4>';
+  areasBox.innerHTML =
+    '<h4>Tu mapa de intereses</h4>';
+
 
   results.forEach(result => {
     if (result.score === 0) return;
 
-    const info = resultsInfo[result.area];
-    const item = document.createElement('div');
-    item.className = 'result-area-item';
+    const info =
+      resultsInfo[result.area];
 
-    const label = document.createElement('div');
-    label.className = 'result-area-label';
+    if (!info) return;
 
-    const name = document.createElement('span');
-    name.textContent = info.emoji + ' ' + info.title;
+    const item =
+      document.createElement('div');
 
-    const pct = document.createElement('strong');
-    pct.textContent = result.percentage + '%';
+    item.className =
+      'result-area-item';
+
+
+    const label =
+      document.createElement('div');
+
+    label.className =
+      'result-area-label';
+
+
+    const name =
+      document.createElement('span');
+
+    name.textContent =
+      `${info.emoji} ${info.title}`;
+
+
+    const pct =
+      document.createElement('strong');
+
+    pct.textContent =
+      `${result.percentage}%`;
+
 
     label.append(name, pct);
 
-    const track = document.createElement('div');
-    track.className = 'result-bar';
 
-    const fill = document.createElement('div');
-    fill.className = 'result-bar-fill';
-    fill.style.width = result.percentage + '%';
+    const track =
+      document.createElement('div');
+
+    track.className =
+      'result-bar';
+
+
+    const fill =
+      document.createElement('div');
+
+    fill.className =
+      'result-bar-fill';
+
+    fill.style.width =
+      `${result.percentage}%`;
+
 
     track.appendChild(fill);
+
     item.append(label, track);
+
     areasBox.appendChild(item);
   });
 
-  /*
-   * Recomendar carreras de todas las áreas con afinidad.
-   * Se incluyen primero las áreas más compatibles, pero
-   * también se muestran opciones de las demás áreas.
-   */
-  const recommendations = [];
-  const seen = new Set();
 
-  results.forEach(result => {
-    if (result.score === 0) return;
+  /* ========================================================
+     CARRERAS RECOMENDADAS
+     Solo de las 3 áreas principales
+     ======================================================== */
 
-    const info = resultsInfo[result.area];
+  const careerBox =
+    document.getElementById('resultCareers');
 
-    // Usa las carreras registradas en el catálogo.
-    const areaCareers = careersData.filter(
-      career => career.area === result.area
-    );
+  if (careerBox) {
 
-    areaCareers.forEach(career => {
-      if (seen.has(career.name)) return;
-      seen.add(career.name);
+    careerBox.innerHTML = '';
 
-      recommendations.push({
-        ...career,
-        percentage: result.percentage,
-        areaTitle: info.title
+    topAreas.forEach(result => {
+
+      const info =
+        resultsInfo[result.area];
+
+      if (!info) return;
+
+
+      const areaCareers =
+        careersData.filter(
+          career =>
+            career.area === result.area
+        );
+
+
+      areaCareers.forEach(career => {
+
+        const card =
+          document.createElement('div');
+
+        card.className =
+          'result-career-card';
+
+
+        const title =
+          document.createElement('strong');
+
+        title.textContent =
+          career.name;
+
+
+        const area =
+          document.createElement('span');
+
+        area.className =
+          'result-tag';
+
+        area.textContent =
+          `${info.emoji} ${info.title}`;
+
+
+        const match =
+          document.createElement('p');
+
+        match.textContent =
+          `Afinidad con el área: ${result.percentage}%`;
+
+
+        const desc =
+          document.createElement('p');
+
+        desc.textContent =
+          career.desc;
+
+
+        const duration =
+          document.createElement('small');
+
+        duration.textContent =
+          `Duración aproximada: ${career.duration}`;
+
+
+        card.append(
+          title,
+          area,
+          match,
+          desc,
+          duration
+        );
+
+        careerBox.appendChild(card);
       });
     });
-  });
+  }
 
-  const careerBox = document.getElementById('resultCareers');
-  careerBox.innerHTML = '';
 
-  recommendations.forEach(career => {
-    const card = document.createElement('div');
-    card.className = 'result-career-card';
+  /* ========================================================
+     UNIVERSIDADES RELACIONADAS
+     ======================================================== */
 
-    const title = document.createElement('strong');
-    title.textContent = career.name;
+  const uniBox =
+    document.getElementById('resultUnis');
 
-    const area = document.createElement('span');
-    area.className = 'result-tag';
-    area.textContent = career.areaTitle;
+  if (uniBox) {
 
-    const match = document.createElement('p');
-    match.textContent =
-      'Afinidad con el área: ' + career.percentage + '%';
+    const universities =
+      new Set();
 
-    const desc = document.createElement('p');
-    desc.textContent = career.desc;
 
-    const duration = document.createElement('small');
-    duration.textContent = 'Duración aproximada: ' + career.duration;
+    topAreas.forEach(result => {
 
-    card.append(title, area, match, desc, duration);
-    careerBox.appendChild(card);
-  });
+      const info =
+        resultsInfo[result.area];
 
-  /*
-   * Las universidades se presentan como opciones generales
-   * relacionadas con las áreas identificadas.
-   */
-  const uniBox = document.getElementById('resultUnis');
-  const universities = new Set();
+      if (!info || !Array.isArray(info.unis)) {
+        return;
+      }
 
-  top.forEach(result => {
-    resultsInfo[result.area].unis.forEach(uni =>
-      universities.add(uni)
-    );
-  });
+      info.unis.forEach(uni => {
+        universities.add(uni);
+      });
+    });
 
-  uniBox.innerHTML = '';
 
-  universities.forEach(uni => {
-    const tag = document.createElement('span');
-    tag.className = 'result-tag';
-    tag.textContent = uni;
-    uniBox.appendChild(tag);
-  });
+    uniBox.innerHTML = '';
 
-  document.getElementById('testResult').style.display = 'block';
+    universities.forEach(uni => {
+
+      const tag =
+        document.createElement('span');
+
+      tag.className =
+        'result-tag';
+
+      tag.textContent =
+        uni;
+
+      uniBox.appendChild(tag);
+    });
+  }
 }
 
-/* Reinicia el test por completo. */
+
+/* ==========================================================
+   REINICIAR TEST
+   ========================================================== */
+
 function resetTest() {
   currentQ = 0;
-  userAnswers = questions.map(() => []);
 
-  document.getElementById('testResult').style.display = 'none';
-  document.getElementById('testContent').style.display = 'block';
+  userAnswers =
+    questions.map(() => []);
+
+  document.getElementById(
+    'testResult'
+  ).style.display = 'none';
+
+  document.getElementById(
+    'testContent'
+  ).style.display = 'block';
 
   loadQuestion();
 }
+
 
 /* ==========================================================
    FILTRO DE CARRERAS
    ========================================================== */
 
 function filterCareers(area, btn) {
-  document.querySelectorAll('.filter-btn').forEach(b =>
-    b.classList.remove('active')
-  );
 
-  if (btn) btn.classList.add('active');
+  document
+    .querySelectorAll('.filter-btn')
+    .forEach(button => {
+      button.classList.remove('active');
+    });
 
-  const grid = document.getElementById('careersGrid');
+  if (btn) {
+    btn.classList.add('active');
+  }
+
+
+  const grid =
+    document.getElementById('careersGrid');
+
+  if (!grid) return;
+
   grid.innerHTML = '';
 
-  const filtered = area === 'all'
-    ? careersData
-    : careersData.filter(c => c.area === area);
 
-  filtered.forEach(c => {
-    const card = document.createElement('div');
-    card.className = 'career-card';
+  const filtered =
+    area === 'all'
+      ? careersData
+      : careersData.filter(
+          career =>
+            career.area === area
+        );
 
-    const areaTag = document.createElement('div');
-    areaTag.className = 'career-area-tag';
+
+  filtered.forEach(career => {
+
+    const card =
+      document.createElement('div');
+
+    card.className =
+      'career-card';
+
+
+    const areaTag =
+      document.createElement('div');
+
+    areaTag.className =
+      'career-area-tag';
+
     areaTag.textContent =
-      resultsInfo[c.area]?.title || c.area;
+      resultsInfo[career.area]?.title ||
+      career.area;
 
-    const name = document.createElement('div');
-    name.className = 'career-name';
-    name.textContent = c.name;
 
-    const desc = document.createElement('div');
-    desc.className = 'career-desc';
-    desc.textContent = c.desc;
+    const name =
+      document.createElement('div');
 
-    const duration = document.createElement('div');
-    duration.className = 'career-duration';
-    duration.textContent = c.duration;
+    name.className =
+      'career-name';
 
-    card.append(areaTag, name, desc, duration);
+    name.textContent =
+      career.name;
+
+
+    const desc =
+      document.createElement('div');
+
+    desc.className =
+      'career-desc';
+
+    desc.textContent =
+      career.desc;
+
+
+    const duration =
+      document.createElement('div');
+
+    duration.className =
+      'career-duration';
+
+    duration.textContent =
+      career.duration;
+
+
+    card.append(
+      areaTag,
+      name,
+      desc,
+      duration
+    );
+
     grid.appendChild(card);
   });
 }
 
+
 /* ==========================================================
-   MENÚ MÓVIL Y ANIMACIONES
+   MENÚ MÓVIL
    ========================================================== */
 
 function toggleMobile() {
-  document.getElementById('mobileMenu').classList.toggle('open');
+  const menu =
+    document.getElementById('mobileMenu');
+
+  if (menu) {
+    menu.classList.toggle('open');
+  }
 }
+
 
 function closeMobile() {
-  document.getElementById('mobileMenu').classList.remove('open');
+  const menu =
+    document.getElementById('mobileMenu');
+
+  if (menu) {
+    menu.classList.remove('open');
+  }
 }
 
-window.addEventListener('DOMContentLoaded', () => {
-  initAnswers();
-  loadQuestion();
 
-  const firstFilter = document.querySelector('.filter-btn');
-  if (firstFilter) filterCareers('all', firstFilter);
+/* ==========================================================
+   INICIALIZACIÓN
+   ========================================================== */
 
-  if ('IntersectionObserver' in window) {
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.1 });
+window.addEventListener(
+  'DOMContentLoaded',
+  () => {
 
-    document.querySelectorAll('.reveal').forEach(el =>
-      observer.observe(el)
-    );
-  } else {
-    document.querySelectorAll('.reveal').forEach(el =>
-      el.classList.add('visible')
-    );
+    initAnswers();
+
+    loadQuestion();
+
+
+    const firstFilter =
+      document.querySelector(
+        '.filter-btn'
+      );
+
+    if (firstFilter) {
+      filterCareers(
+        'all',
+        firstFilter
+      );
+    }
+
+
+    /* ------------------------------------------------------
+       Animaciones al hacer scroll
+       ------------------------------------------------------ */
+
+    if (
+      'IntersectionObserver' in window
+    ) {
+
+      const observer =
+        new IntersectionObserver(
+          entries => {
+
+            entries.forEach(entry => {
+
+              if (
+                entry.isIntersecting
+              ) {
+
+                entry.target
+                  .classList
+                  .add('visible');
+
+                observer.unobserve(
+                  entry.target
+                );
+              }
+            });
+
+          },
+          {
+            threshold: 0.1
+          }
+        );
+
+
+      document
+        .querySelectorAll('.reveal')
+        .forEach(element => {
+          observer.observe(element);
+        });
+
+    } else {
+
+      document
+        .querySelectorAll('.reveal')
+        .forEach(element => {
+          element.classList.add(
+            'visible'
+          );
+        });
+    }
   }
-});
+);
